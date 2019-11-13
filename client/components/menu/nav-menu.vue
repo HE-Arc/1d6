@@ -12,7 +12,7 @@
         <img
           src="https://cdn.discordapp.com/icons/628956181922185246/5c74d1ba261f479dfa5ec5a357107ebd.webp?size=128"
         > 
-        <menu-link>Indécis</menu-link>
+        <menu-link link="/">Indécis</menu-link>
       </a>
 
       <a
@@ -34,31 +34,29 @@
     >
       <div class="navbar-end">
         <menu-link
-          link="vote"
+          link="poll"
         >
           Create a poll
         </menu-link>
           
-        <menu-link
-          link="groups"
-        >
+        <menu-link link="groups">
           Groups
         </menu-link>
 
         <div class="navbar-item">
           <div class="buttons">
-            <a
+            <nuxt-link
               class="button is-primary"
-              href="register"
+              to="register"
             >
               <strong>Sign up</strong>
-            </a>
-            <a
+            </nuxt-link>
+            <nuxt-link
               class="button is-light"
-              href="login"
+              to="login"
             >
               Log in
-            </a>
+            </nuxt-link>
           </div>
         </div>
       </div>

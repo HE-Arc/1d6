@@ -1,10 +1,10 @@
 <template>
-  <a
-    :href="link"
+  <nuxt-link
+    :to="link"
     class="navbar-item"
   >
     <slot />
-  </a>
+  </nuxt-link>
 </template>
 
 <script>
