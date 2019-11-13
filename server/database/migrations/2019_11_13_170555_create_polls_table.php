@@ -17,6 +17,8 @@ class CreatePollsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('url');
+            $table->unsignedBigInteger('chosen_item_id')->nullable();
+            $table->foreign('chosen_item_id')->references('id')->on('items');
             $table->timestamps();
         });
     }
