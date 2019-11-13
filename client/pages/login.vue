@@ -231,3 +231,17 @@
     </div>
   </div>
 </template>
+
+<script>
+/*
+this.$auth.loginWith('local', {
+  data: {
+    username: 'your_username',
+    password: 'your_password'
+  }
+})
+*/
+export default {
+  
+};
+</script>
