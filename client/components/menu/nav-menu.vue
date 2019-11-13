@@ -20,8 +20,9 @@
         class="navbar-burger burger"
         aria-label="menu"
         aria-expanded="false"
-        data-target="navbarBasicExample"
       >
+        <!-- TODO: Handle nav burger -->
+      
         <span aria-hidden="true" />
         <span aria-hidden="true" />
         <span aria-hidden="true" />
@@ -29,7 +30,6 @@
     </div>
 
     <div
-      id="navbarBasicExample"
       class="navbar-menu"
     >
       <div class="navbar-end">

@@ -33,6 +33,7 @@
 
 <script>
 /*
+TODO: 
 this.$auth.loginWith('local', {
   data: {
     username: 'your_username',
