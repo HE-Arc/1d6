@@ -41,8 +41,20 @@ export default {
   */
   modules: [
     // Doc: https://github.com/nuxt-community/modules/tree/master/packages/bulma
-    '@nuxtjs/bulma'
+    '@nuxtjs/bulma',
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
+  auth: {
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/api/auth/login', method: 'post'},
+          logout: { url: '/api/auth/logout', method: 'post' }
+        }
+      }
+    }
+  },
   /*
   ** Build configuration
   */
@@ -60,4 +72,4 @@ export default {
     extend (config, ctx) {
     }
   }
-}
+};

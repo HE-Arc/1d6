@@ -17,17 +17,11 @@ export default {
 };
 </script>
 
-<style>
-html {
-  background-color: #eee;
-}
-</style>
-
 <style scoped>
 main {
-  width: 80%;
+  width: 20%;
   margin: 0 auto;
-  margin-top: 20px;
+  margin-top: 5%;
   padding: 20px;
   border-radius: 1px;
   height: 100%;
