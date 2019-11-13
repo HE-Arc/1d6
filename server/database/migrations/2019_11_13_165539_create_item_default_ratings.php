@@ -14,11 +14,11 @@ class CreateItemDefaultRatings extends Migration
     public function up()
     {
         Schema::create('item_default_ratings', function (Blueprint $table) {
-            $table->integer('rating');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('item_id');
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->unsignedTinyInteger('rating');
             $table->timestamps();
         });
     }

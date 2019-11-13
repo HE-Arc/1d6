@@ -20,7 +20,7 @@ class CreatePollRatingsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('item_id');
             $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
-            $table->integer('rating')->nullable();
+            $table->unsignedTinyInteger('rating')->nullable();
             $table->timestamps();
         });
     }
