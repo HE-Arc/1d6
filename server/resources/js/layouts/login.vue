@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import navMenu from '~/components/menu/nav-menu';
+import navMenu from '../components/menu/nav-menu';
 
 export default {
   components: {

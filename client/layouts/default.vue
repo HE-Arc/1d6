@@ -2,7 +2,7 @@
   <div>
     <nav-menu />
     <main>
-      <nuxt />
+      <slot />
     </main>
   </div>
 </template>

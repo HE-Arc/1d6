@@ -9,7 +9,46 @@ import VueAxios from 'vue-axios';
 import axios from 'axios';
 Vue.use(VueAxios, axios);
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+// Layouts
+Vue.component('default-layout', require('./layouts/default.vue').default);
+Vue.component('login-layout', require('./layouts/login.vue').default);
 
-const router = new VueRouter({ mode: 'history'});
+// Pages
+import IndexPage from "./components/pages/index.vue"
+import LoginPage from "./components/pages/login.vue"
+import PollPage from "./components/pages/poll.vue"
+import RegisterPage from "./components/pages/register.vue"
+import GroupsPage from "./components/pages/groups.vue"
+
+// Available vue routes
+const routes = [
+    {
+        name: 'home',
+        path: '/',
+        component: IndexPage
+    },
+    {
+        name: 'poll',
+        path: '/poll',
+        component: PollPage
+    },
+    {
+        name: 'groups',
+        path: '/groups',
+        component: GroupsPage
+    },
+    {
+        name: 'login',
+        path: '/login',
+        component: LoginPage
+    },
+    {
+        name: 'register',
+        path: '/register',
+        component: RegisterPage
+    }
+  ];
+  
+
+const router = new VueRouter({ mode: 'history', routes: routes});
 const app = new Vue(Vue.util.extend({ router })).$mount('#app');

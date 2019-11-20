@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import navMenu from '~/components/menu/nav-menu';
+import navMenu from '../components/menu/nav-menu';
 
 export default {
   components: {
@@ -17,11 +17,17 @@ export default {
 };
 </script>
 
+<style>
+html {
+  background-color: #eee;
+}
+</style>
+
 <style scoped>
 main {
-  width: 20%;
+  width: 80%;
   margin: 0 auto;
-  margin-top: 5%;
+  margin-top: 20px;
   padding: 20px;
   border-radius: 1px;
   height: 100%;

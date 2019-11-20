@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import menuLink from '~/components/menu/link';
+import menuLink from './link';
 
 export default {
   components: {
