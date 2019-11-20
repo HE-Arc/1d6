@@ -11,7 +11,7 @@ class Item extends Model
      * 
      * @var array
      */
-    protected $attributes = [
+    protected $fillable = [
         'name',
         'description',
         'url',
