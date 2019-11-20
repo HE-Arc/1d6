@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ItemResource;
-use App\Item;
+use App\Http\Resources\GroupResource;
+use App\Group;
 use Illuminate\Http\Request;
 
-class ItemController extends Controller
+class GroupController extends Controller
 {
-
-    // TODO : Check authorisations
+        // TODO : Check authorisations
 
     /**
      * Display a listing of the resource.
@@ -18,7 +17,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return ItemResource::collection(Item::all());
+        return GroupResource::collection(Group::with('users'));
     }
 
     /**
@@ -29,14 +28,17 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        $item = Item::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'url' => $request->url,
-            'image_url' => $request->image_url,
+        $group = Group::create([
+            'name' => $request->name, 
           ]);
+        foreach (explode(',',$request->users) as $user)
+        {
+            $group->users()->attach($user, ["admin" => false]);
+        }
     
-        return new ItemResource($item);
+        return new GroupResource($group);
+        
+        return ;
     }
 
     /**
@@ -45,9 +47,9 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Item $item)
+    public function show(Group $group)
     {
-        return new ItemResource($item);
+        return new GroupResource($group);
     }
 
     /**
@@ -57,11 +59,11 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Item $item)
+    public function update(Request $request, Group $group)
     {
-        $item->update($request->only(['name', 'description', 'url', 'image_url']));
+        $group->update($request->only(['name']));
 
-        return new ItemResource($item);
+        return new GroupResource($group);
     }
 
     /**
@@ -70,9 +72,9 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Item $item)
+    public function destroy(Group $group)
     {
-        $item->delete();
+        $group->delete();
 
         return response()->json(null, 204);
     }

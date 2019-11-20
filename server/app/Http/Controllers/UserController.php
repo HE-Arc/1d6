@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ItemResource;
-use App\Item;
+use App\Http\Resources\UserResource;
+use App\User;
 use Illuminate\Http\Request;
 
-class ItemController extends Controller
+class UserController extends Controller
 {
-
     // TODO : Check authorisations
 
     /**
@@ -18,7 +17,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return ItemResource::collection(Item::all());
+        return UserResource::collection(User::all());
     }
 
     /**
@@ -29,14 +28,13 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        $item = Item::create([
+        $user = User::create([
             'name' => $request->name,
-            'description' => $request->description,
-            'url' => $request->url,
-            'image_url' => $request->image_url,
+            'email' => $request->email,
+            'password' => $request->password,
           ]);
     
-        return new ItemResource($item);
+        return new UserResource($user);
     }
 
     /**
@@ -45,9 +43,9 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Item $item)
+    public function show(User $user)
     {
-        return new ItemResource($item);
+        return new UserResource($user);
     }
 
     /**
@@ -57,11 +55,11 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Item $item)
+    public function update(Request $request, User $user)
     {
-        $item->update($request->only(['name', 'description', 'url', 'image_url']));
+        $user->update($request->only(['name', 'email']));
 
-        return new ItemResource($item);
+        return new UserResource($user);
     }
 
     /**
@@ -70,9 +68,9 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Item $item)
+    public function destroy(User $user)
     {
-        $item->delete();
+        $user->delete();
 
         return response()->json(null, 204);
     }

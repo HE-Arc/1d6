@@ -2,14 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ItemResource;
-use App\Item;
+use App\Http\Resources\PollResource;
+use App\Poll;
 use Illuminate\Http\Request;
 
-class ItemController extends Controller
+class PollController extends Controller
 {
-
-    // TODO : Check authorisations
+        // TODO : Check authorisations
 
     /**
      * Display a listing of the resource.
@@ -18,7 +17,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return ItemResource::collection(Item::all());
+        return PollResource::collection(Poll::all());
     }
 
     /**
@@ -29,14 +28,12 @@ class ItemController extends Controller
      */
     public function store(Request $request)
     {
-        $item = Item::create([
+        $poll = Poll::create([
             'name' => $request->name,
-            'description' => $request->description,
             'url' => $request->url,
-            'image_url' => $request->image_url,
           ]);
     
-        return new ItemResource($item);
+        return new PollResource($poll);
     }
 
     /**
@@ -45,9 +42,9 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Item $item)
+    public function show(Poll $poll)
     {
-        return new ItemResource($item);
+        return new PollResource($poll);
     }
 
     /**
@@ -57,11 +54,11 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Item $item)
+    public function update(Request $request, Poll $poll)
     {
-        $item->update($request->only(['name', 'description', 'url', 'image_url']));
+        $poll->update($request->only(['name','url']));
 
-        return new ItemResource($item);
+        return new PollResource($poll);
     }
 
     /**
@@ -70,9 +67,9 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Item $item)
+    public function destroy(Poll $poll)
     {
-        $item->delete();
+        $poll->delete();
 
         return response()->json(null, 204);
     }

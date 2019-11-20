@@ -18,3 +18,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('items', 'ItemController');
+Route::apiResource('polls', 'PollController');
+Route::apiResource('groups', 'GroupController');
+Route::apiResource('users', 'UserController');
