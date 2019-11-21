@@ -14,4 +14,4 @@
 // We let the vue router handle everything
 Route::get('/{any}', function () {
     return view('home');
-})->where('any', '.*');
+})->where('any', '^(?!api).*$');
