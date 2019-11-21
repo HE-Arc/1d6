@@ -55,3 +55,8 @@ mysql -p
 
 CREATE DATABASE `laravel`;
 ```
+
+# Deployment
+Here is a list of things that must be changed when deploying:
+
+- Base API url in app.js
