@@ -9,6 +9,12 @@ import VueAxios from 'vue-axios';
 import axios from 'axios';
 Vue.use(VueAxios, axios);
 
+axios.defaults.baseURL = 'http://localhost:8000/api'
+
+if(localStorage.getItem("apiToken") != null) {
+    axios.defaults.headers.common = {'Authorization': `Bearer ${localStorage.getItem("apiToken")}`}
+}
+
 // Layouts
 Vue.component('default-layout', require('./layouts/default.vue').default);
 Vue.component('login-layout', require('./layouts/login.vue').default);
