@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -57,12 +58,15 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $user = $this->guard('api')->user();
-
+        
         if ($user) {
             $user->api_token = null;
             $user->save();
+            return response()->json(['data' => 'User logged out.'], 200);
+        }
+        else {
+            return response()->json(['data' => 'Not logged in'], 401);
         }
 
-        return response()->json(['data' => 'User logged out.'], 200);
     }
 }
