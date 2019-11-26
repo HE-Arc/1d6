@@ -63,6 +63,7 @@ export default {
     formSubmit(e) {
       e.preventDefault();
       let currentObj = this;
+      let router = this.$router;
       this.axios
         .post(this.axios.defaults.baseURL + "/register", {
           email: this.email,
@@ -76,6 +77,7 @@ export default {
           // TODO: Handle errors, and success, and querying animation
           // This would not be done in a "real" application
           localStorage.setItem("apiToken", response.data.data.api_token);
+          router.replace("/");
         })
         .catch(function(error) {
           alert("Register failed");

@@ -29,7 +29,12 @@
               <strong>Sign up</strong>
             </router-link>
             <router-link v-show="!connected" class="button is-light" to="login">Log in</router-link>
-            <button v-on:click="logout" v-show="connected" class="button is-light" to="login">Log out</button>
+            <button
+              v-on:click="logout"
+              v-show="connected"
+              class="button is-light"
+              to="login"
+            >Log out</button>
           </div>
         </div>
       </div>
@@ -50,10 +55,9 @@ export default {
     };
   },
   methods: {
-    logout () {
-      // TODO: Call logout on database? Will disconnect everywhere if we do that
+    logout() {
       localStorage.clear();
-      this.$router.push('/'); 
+      this.$router.replace('/login');
     }
   }
 };
