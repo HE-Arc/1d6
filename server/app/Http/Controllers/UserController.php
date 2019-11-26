@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return UserResource::collection(User::all());
+        return UserResource::collection(User::with('groups', 'items', 'polls')->paginate(25));
     }
 
     /**
@@ -32,8 +32,17 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => $request->password,
-          ]);
-    
+        ]);
+
+        foreach (explode(',', $request->groups) as $group) {
+            $user->groups()->attach($group);
+        }
+        foreach (explode(',', $request->items) as $item) {
+            $user->items()->attach($item);
+        }
+        foreach (explode(',', $request->polls) as $poll) {
+            $user->polls()->attach($poll);
+        }
         return new UserResource($user);
     }
 
@@ -45,7 +54,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return new UserResource($user);
+        return UserResource(User::with('groups', 'items', 'polls')->find($user));
     }
 
     /**

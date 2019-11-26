@@ -17,7 +17,7 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return GroupResource::collection(Group::with('users'));
+        return GroupResource::collection(Group::with('users', 'items')->paginate(25));
     }
 
     /**
@@ -27,18 +27,20 @@ class GroupController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    { 
         $group = Group::create([
             'name' => $request->name, 
           ]);
         foreach (explode(',',$request->users) as $user)
         {
-            $group->users()->attach($user, ["admin" => false]);
+            $group->users()->attach($user, ["admin" => false]); // TODO : deal with admin rights
+        }
+        foreach (explode(',',$request->items) as $item)
+        {
+            $group->items()->attach($item);
         }
     
         return new GroupResource($group);
-        
-        return ;
     }
 
     /**
@@ -47,16 +49,16 @@ class GroupController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Group $group)
+    public function show($group)
     {
-        return new GroupResource($group);
+        return new GroupResource(Group::with('users', 'items')->find($group));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Group  $group
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Group $group)
