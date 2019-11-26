@@ -64,7 +64,7 @@ export default {
       e.preventDefault();
       let currentObj = this;
       this.axios
-        .post("http://localhost:8000/api/register", {
+        .post(this.axios.defaults.baseURL + "/register", {
           email: this.email,
           name: this.username,
           password: this.password,
