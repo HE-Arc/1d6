@@ -29,3 +29,4 @@ db.json
 public/js
 .deploy*/
 src/_drafts
+public/css/app.css
