@@ -24,15 +24,5 @@ export default {
 </script>
 
 <style>
-  .container {
-    border-left: 4px solid #ccc;
-    padding-left: 20px;
-    margin-bottom: 20px;
-    margin-top: 20px;
-  }
 
-  .header {
-    display: block;
-    font-size: 1.3em;
-  }
 </style>
