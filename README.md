@@ -57,6 +57,16 @@ CREATE DATABASE `laravel`;
 ```
 
 # Deployment
-Here is a list of things that must be changed when deploying:
 
-- Base API url in app.js
+Once the project has been cloned, modify the following files according to your setup:
+
+- Base API url in resources/js/app.js
+- Database configuration in config/database.php
+
+Then, run
+
+```bash
+composer install
+npm install
+npm run production
+```
