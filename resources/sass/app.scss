@@ -1,4 +1,15 @@
 //
+.floating-button {
+    position: fixed;
+    right: 10%;
+    bottom: 5%;
+    font-weight: bold;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.floating-button:focus {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)!important;
+}
 
 .container-border {
     border-left: 4px solid #ccc;
