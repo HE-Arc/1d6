@@ -1,6 +1,6 @@
 <template>
   <default-layout>
-    <div class="modal is-active">
+    <div class="modal">
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
@@ -63,7 +63,14 @@
     <div class="columns is-multiline is-1-mobile is-0-tablet is-3-desktop is-8-widescreen container-container">
       <div class="column container-border poll-card is-one-quarter">
         <span class="header">Mangeur de lel</span>
-        <b>5</b> peoples<br>
+        <b>5</b> members<br>
+        <span class="poll-card-action"><a href="#"><i class="fa fa-edit"></i> Edit</a></span>
+        <span class="poll-card-action"><a href="#"><i class="fa fa-trash"></i> Delete</a></span>
+        <span class="poll-card-action"><a href="#"><i class="fa fa-star"></i> Stars</a></span>
+      </div>
+      <div class="column container-border poll-card is-one-quarter">
+        <span class="header">Mangeur de lel</span>
+        <b>5</b> members<br>
         <span class="poll-card-action"><a href="#"><i class="fa fa-edit"></i> Edit</a></span>
         <span class="poll-card-action"><a href="#"><i class="fa fa-trash"></i> Delete</a></span>
         <span class="poll-card-action"><a href="#"><i class="fa fa-star"></i> Stars</a></span>
