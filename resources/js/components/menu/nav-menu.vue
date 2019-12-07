@@ -3,7 +3,7 @@
     <div class="navbar-brand">
       <a class="navbar-item" href>
         <img
-          src="https://cdn.discordapp.com/icons/628956181922185246/5c74d1ba261f479dfa5ec5a357107ebd.webp?size=128"
+          src="/images/logo.png"
         />
         <menu-link link="/">Indécis</menu-link>
       </a>
