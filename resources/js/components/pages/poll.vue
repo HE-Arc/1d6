@@ -1,45 +1,68 @@
 <template>
   <default-layout>
-    <h1>Create a new poll</h1>
-    <label class="label">Import settings from groups</label>
-
-    <div class="field has-addons">
-      <div class="control is-expanded">
-        <div class="select is-fullwidth">
-          <select name="groups">
-            <option>Mid'Arc</option>
-            <option>Ciném</option>
-            <option>Games</option>
-          </select>
+    <div class="columns">
+      <div class="column is-one-third">
+        <h1>Your votes</h1>
+        <div class="field">
+          <select-ratings />
+        </div>
+        <div class="buttons is-right">
+          <button type="submit" class="button is-danger">Reset</button>
+          <button type="submit" class="button is-primary">Update ratings</button>
         </div>
       </div>
-      <div class="control">
-        <button type="submit" class="button is-primary">Import settings</button>
+      <div class="column is-two-third has-border">
+        <h1>Poll</h1>
+        <div class="canvas-container">
+          <canvas
+            style="display: inline-block; background-color: #afafaf; max-width: 100%; width: 400px; height: 400px; border-radius: 400px;"
+          ></canvas>
+          <div class="vote-status">
+            <b>3 / 4</b>
+            <i class="fa fa-users"></i>
+          </div>
+          <div class="buttons has-addons is-centered">
+            <button type="submit" class="button is-info">Spin the wheel</button>
+            <!--
+            <button type="submit" class="button is-light">Waiting for owner to spin the wheel</button>
+            -->
+          </div>
+        </div>
       </div>
-    </div>
-    <hr />
-
-    <div class="columns">
-      <div class="column is-half">
-        <select-list icon="fa-user-plus" placeholder="Member name">Members</select-list>
-      </div>
-      <div class="column is-half">
-        <select-list icon="fa-plus" placeholder="Item name">Default items</select-list>
-      </div>
-    </div>
-
-    <div class="control">
-      <button type="submit" class="button is-primary">Create poll</button>
     </div>
   </default-layout>
 </template>
 <script>
-import selectList from "../groups/select-list";
+import selectRatings from "../items/select-ratings";
 
 export default {
   components: {
-    selectList
+    selectRatings
   },
   middleware: "auth"
 };
 </script>
+
+<style scoped>
+.vote-status {
+  margin: 20px;
+}
+
+.canvas-container {
+  text-align: center;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media only screen and (min-width: 769px) {
+  .has-border {
+    border-left: 1px solid #eee;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .has-border {
+    border-top: 1px solid #eee;
+  }
+}
+</style>
