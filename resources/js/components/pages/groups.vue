@@ -63,6 +63,55 @@ export default {
       groups: []
     };
   },
+  methods: {
+    createGroup: function() {
+      this.currentGroup.name = "";
+      this.currentGroup.users = [];
+      this.currentGroup.items = [];
+
+      this.$refs.modal.title = "Create a new group";
+      this.$refs.modal.saveText = "Create";
+      this.$refs.modal.saveFunction = this.addGroup;
+
+      this.populateAndDisplayModal();
+    },
+    editGroup: function(id) {
+      // TODO: get group from API using id
+      // this.currentGroup = ...
+      // remove self from the list so that it doesn't appear twice
+
+      this.$refs.modal.title = "Edit group";
+      this.$refs.modal.saveText = "Save";
+      this.$refs.modal.saveFunction = this.saveGroup;
+
+      this.populateAndDisplayModal();
+    },
+    populateAndDisplayModal: function() {
+      this.$refs["group-name"] = this.currentGroup.name;
+      this.$refs["group-users"].unremovableItems = ["You"];
+      this.$refs["group-users"].items = this.currentGroup.users;
+      this.$refs["group-items"].items = this.currentGroup.items;
+
+      this.$refs.modal.active = true;
+    },
+    addGroup: function() {
+      this.currentGroup.users = this.currentGroup.users.map(username => {
+        return { name: username, admin: false };
+      });
+      this.currentGroup.users.push({
+        name: localStorage.getItem("username"),
+        amdin: true
+      });
+
+      // TODO: send this.currentGroup to the API
+      console.log(this.currentGroup);
+    },
+    saveGroup: function() {
+      // TODO
+    }
+  },
+  mounted: function() {
+    // TODO: get all groups from the user from the API
   }
 };
 </script>
