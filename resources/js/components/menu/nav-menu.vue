@@ -1,12 +1,10 @@
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href>
-        <img
-          src="https://cdn.discordapp.com/icons/628956181922185246/5c74d1ba261f479dfa5ec5a357107ebd.webp?size=128"
-        />
+      <router-link class="navbar-item" to="/">
+        <img src="/images/logo.png" />
         <menu-link link="/">Indécis</menu-link>
-      </a>
+      </router-link>
 
       <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false">
         <!-- TODO: Handle nav burger -->
@@ -19,7 +17,7 @@
 
     <div class="navbar-menu">
       <div class="navbar-end">
-        <menu-link link="poll">Create a poll</menu-link>
+        <menu-link link="create-poll">Create a poll</menu-link>
 
         <menu-link link="groups">Groups</menu-link>
 
@@ -57,7 +55,7 @@ export default {
   methods: {
     logout() {
       localStorage.clear();
-      this.$router.replace('/login');
+      this.$router.replace("/login");
     }
   }
 };

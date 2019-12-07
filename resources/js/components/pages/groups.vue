@@ -59,7 +59,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .input-group-name {
   margin-bottom: 20px;
   width: auto;

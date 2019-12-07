@@ -24,6 +24,7 @@ Vue.component('login-layout', require('./layouts/login.vue').default);
 // Pages
 import IndexPage from "./components/pages/index.vue"
 import LoginPage from "./components/pages/login.vue"
+import CreatePollPage from "./components/pages/create-poll.vue"
 import PollPage from "./components/pages/poll.vue"
 import RegisterPage from "./components/pages/register.vue"
 import GroupsPage from "./components/pages/groups.vue"
@@ -39,6 +40,11 @@ const routes = [
         name: 'poll',
         path: '/poll',
         component: PollPage
+    },
+    {
+        name: 'create-poll',
+        path: '/create-poll',
+        component: CreatePollPage
     },
     {
         name: 'groups',
