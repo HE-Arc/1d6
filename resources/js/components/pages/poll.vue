@@ -14,9 +14,7 @@
       <div class="column is-two-third has-border">
         <h1>Poll</h1>
         <div class="canvas-container">
-          <canvas
-            style="display: inline-block; background-color: #afafaf; max-width: 100%; width: 400px; height: 400px; border-radius: 400px;"
-          ></canvas>
+          <wheel></wheel>
           <div class="vote-status">
             <b>3 / 4</b>
             <i class="fa fa-users"></i>
@@ -34,10 +32,12 @@
 </template>
 <script>
 import selectRatings from "../items/select-ratings";
+import wheel from "../wheel";
 
 export default {
   components: {
-    selectRatings
+    selectRatings,
+    wheel
   },
   middleware: "auth"
 };
