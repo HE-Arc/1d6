@@ -4,7 +4,13 @@
       <div class="field">
         <label class="label">Username</label>
         <div class="control">
-          <input class="input is-success" type="text" v-model="username" placeholder="Username" />
+          <input
+            class="input is-success"
+            type="text"
+            v-model="username"
+            placeholder="Username"
+            ref="name"
+          />
         </div>
         <p class="help is-danger" v-for="error in errors.name" v-bind:key="error">{{error}}</p>
       </div>
@@ -18,6 +24,7 @@
             v-model="email"
             placeholder="email@example.com"
             value
+            ref="email"
           />
         </div>
         <p class="help is-danger" v-for="error in errors.email" v-bind:key="error">{{error}}</p>
@@ -26,7 +33,13 @@
       <div class="field">
         <label class="label">Password</label>
         <div class="control">
-          <input class="input is-success" type="password" v-model="password" placeholder="Password" />
+          <input
+            class="input is-success"
+            type="password"
+            v-model="password"
+            placeholder="Password"
+            ref="password"
+          />
         </div>
       </div>
 
@@ -86,6 +99,12 @@ export default {
         .catch(function(error) {
           let errors = error.response.data.errors;
           currentObj.errors = errors;
+          for (let type in errors) {
+            if (errors[type].length > 0) {
+              currentObj.$refs[type].focus();
+              break;
+            }
+          }
           currentObj.output = error;
         });
     }
