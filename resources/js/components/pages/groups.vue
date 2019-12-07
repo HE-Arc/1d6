@@ -1,60 +1,68 @@
 <template>
   <default-layout>
-    <div class="modal">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">Create a new group</p>
-          <button class="delete" aria-label="close"></button>
-        </header>
-        <section class="modal-card-body">
-          <form>
+    <modal
+      title="Create a new group"
+      save-text="Create group"
+      :save-function="addGroup"
+      ref="modal"
+    >
             <label class="label">Group name</label>
-            <input type="text" placeholder="Where are we gonna eat" class="input input-group-name"/>
+      <input
+        type="text"
+        placeholder="Where are we gonna eat ?"
+        class="input input-group-name"
+        v-model="currentGroup.name"
+      />
             <div class="columns">
               <div class="column is-half">
-                <select-list icon="fa-user-plus" placeholder="Member name">Members</select-list>
+          <select-list
+            icon="fa-user-plus"
+            placeholder="Member name"
+            content-type="users"
+            ref="group-users"
+          >Members</select-list>
               </div>
               <div class="column is-half">
-                <select-list icon="fa-plus" placeholder="Item name">Default items</select-list>
+          <select-list
+            icon="fa-plus"
+            placeholder="Item name"
+            content-type="items"
+            ref="group-items"
+          >Default items</select-list>
               </div>
             </div>
-          </form>
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-success">Create group</button>
-          <button class="button">Cancel</button>
-        </footer>
-      </div>
-    </div>
+    </modal>
     <h1>Your groups</h1>
-    <div class="columns is-multiline is-1-mobile is-0-tablet is-3-desktop is-8-widescreen container-container">
-      <div class="column container-border poll-card is-one-quarter">
-        <span class="header">Mangeur de lel</span>
-        <b>5</b> members<br>
-        <span class="poll-card-action"><a href="#"><i class="fa fa-edit"></i> Edit</a></span>
-        <span class="poll-card-action"><a href="#"><i class="fa fa-trash"></i> Delete</a></span>
-        <span class="poll-card-action"><a href="#"><i class="fa fa-star"></i> Stars</a></span>
+    <div
+      class="columns is-multiline is-1-mobile is-0-tablet is-3-desktop is-8-widescreen container-container"
+    >
+      <group-card v-for="group in groups" v-bind:key="group.index" v-bind:group="group"></group-card>
       </div>
-      <div class="column container-border poll-card is-one-quarter">
-        <span class="header">Mangeur de lel</span>
-        <b>5</b> members<br>
-        <span class="poll-card-action"><a href="#"><i class="fa fa-edit"></i> Edit</a></span>
-        <span class="poll-card-action"><a href="#"><i class="fa fa-trash"></i> Delete</a></span>
-        <span class="poll-card-action"><a href="#"><i class="fa fa-star"></i> Stars</a></span>
-      </div>
-    </div>
-    <button class="button is-primary is-rounded floating-button">New group</button>
+    <button class="button is-primary is-rounded floating-button" v-on:click="createGroup">New group</button>
   </default-layout>
 </template>
 
 <script>
-
-import selectList from '../groups/select-list';
+import modal from "../modal";
+import selectList from "../groups/select-list";
+import groupCard from "../groups/group-card";
 
 export default {
   components: {
-    selectList
+    modal,
+    selectList,
+    groupCard
+  },
+  data() {
+    return {
+      currentGroup: {
+        name: "",
+        users: [],
+        items: []
+      },
+      groups: []
+    };
+  },
   }
 };
 </script>
