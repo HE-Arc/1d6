@@ -1,12 +1,10 @@
 <template>
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      <a class="navbar-item" href>
-        <img
-          src="/images/logo.png"
-        />
+      <router-link class="navbar-item" to="/">
+        <img src="/images/logo.png" />
         <menu-link link="/">Indécis</menu-link>
-      </a>
+      </router-link>
 
       <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false">
         <!-- TODO: Handle nav burger -->
@@ -57,7 +55,7 @@ export default {
   methods: {
     logout() {
       localStorage.clear();
-      this.$router.replace('/login');
+      this.$router.replace("/login");
     }
   }
 };
