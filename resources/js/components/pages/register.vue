@@ -4,8 +4,15 @@
       <div class="field">
         <label class="label">Username</label>
         <div class="control">
-          <input class="input is-success" type="text" v-model="username" placeholder="Username" />
+          <input
+            class="input is-success"
+            type="text"
+            v-model="username"
+            placeholder="Username"
+            ref="name"
+          />
         </div>
+        <p class="help is-danger" v-for="error in errors.name" v-bind:key="error">{{error}}</p>
       </div>
 
       <div class="field">
@@ -17,14 +24,22 @@
             v-model="email"
             placeholder="email@example.com"
             value
+            ref="email"
           />
         </div>
+        <p class="help is-danger" v-for="error in errors.email" v-bind:key="error">{{error}}</p>
       </div>
 
       <div class="field">
         <label class="label">Password</label>
         <div class="control">
-          <input class="input is-success" type="password" v-model="password" placeholder="Password" />
+          <input
+            class="input is-success"
+            type="password"
+            v-model="password"
+            placeholder="Password"
+            ref="password"
+          />
         </div>
       </div>
 
@@ -38,6 +53,7 @@
             placeholder="Password"
           />
         </div>
+        <p class="help is-danger" v-for="error in errors.password" v-bind:key="error">{{error}}</p>
       </div>
 
       <div class="field is-grouped is-grouped-right">
@@ -53,6 +69,7 @@
 export default {
   data() {
     return {
+      errors: { name: [], password: [], email: [] },
       username: "",
       email: "",
       password: "",
@@ -80,8 +97,13 @@ export default {
           router.replace("/");
         })
         .catch(function(error) {
-          alert("Register failed");
-          console.log("err", error);
+          let errors = error.response.data.errors;
+          currentObj.errors = errors;
+          // focus on the first faulty field
+          for (let type in errors) {
+            currentObj.$refs[type].focus();
+            break;
+          }
           currentObj.output = error;
         });
     }
