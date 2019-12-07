@@ -13,42 +13,10 @@
             <input type="text" placeholder="Where are we gonna eat" class="input input-group-name"/>
             <div class="columns">
               <div class="column is-half">
-                <label class="label">Members</label>
-                <div class="list is-hoverable group-item-list">
-                  <span class="list-item">Mcdo <a class="delete-item"><i class="fa fa-trash"></i></a></span>
-                  <span class="list-item"><a class="delete-item"><i class="fa fa-trash"></i></a>Paprika</span>
-                  <span class="list-item"><a class="delete-item"><i class="fa fa-trash"></i></a>Bleu café</span>
-                  <span class="list-item"><a class="delete-item"><i class="fa fa-trash"></i></a>Coop pronto</span>
-                  <span class="list-item"><a class="delete-item"><i class="fa fa-trash"></i></a>Piadine</span>
-                  <span class="list-item"><a class="delete-item"><i class="fa fa-trash"></i></a>Cafète de la he-arc</span>
-                </div>
-                <div class="field has-addons">
-                  <div class="control is-expanded">
-                    <input type="text" placeholder="Member username" class="input"/>
-                  </div>
-                  <div class="control">
-                    <button type="submit" class="button is-primary"><i class="fa fa-user-plus"></i></button>
-                  </div>
-                </div>
+                <select-list icon="fa-user-plus" placeholder="Member name">Members</select-list>
               </div>
               <div class="column is-half">
-                <label class="label">Default items</label>
-                <div class="list is-hoverable group-item-list">
-                  <span class="list-item">Mcdo <a class="delete-item"><i class="fa fa-trash"></i></a></span>
-                  <span class="list-item"><a class="delete-item"><i class="fa fa-trash"></i></a>Paprika</span>
-                  <span class="list-item"><a class="delete-item"><i class="fa fa-trash"></i></a>Bleu café</span>
-                  <span class="list-item"><a class="delete-item"><i class="fa fa-trash"></i></a>Coop pronto</span>
-                  <span class="list-item"><a class="delete-item"><i class="fa fa-trash"></i></a>Piadine</span>
-                  <span class="list-item"><a class="delete-item"><i class="fa fa-trash"></i></a>Cafète de la he-arc</span>
-                </div>
-                <div class="field has-addons">
-                  <div class="control is-expanded">
-                    <input type="text" placeholder="Item name" class="input"/>
-                  </div>
-                  <div class="control">
-                    <button type="submit" class="button is-primary"><i class="fa fa-plus"></i></button>
-                  </div>
-                </div>
+                <select-list icon="fa-plus" placeholder="Item name">Default items</select-list>
               </div>
             </div>
           </form>
@@ -81,8 +49,13 @@
 </template>
 
 <script>
+
+import selectList from '../groups/select-list';
+
 export default {
-  components: {}
+  components: {
+    selectList
+  }
 };
 </script>
 
