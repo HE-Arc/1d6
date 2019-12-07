@@ -99,11 +99,10 @@ export default {
         .catch(function(error) {
           let errors = error.response.data.errors;
           currentObj.errors = errors;
+          // focus on the first faulty field
           for (let type in errors) {
-            if (errors[type].length > 0) {
-              currentObj.$refs[type].focus();
-              break;
-            }
+            currentObj.$refs[type].focus();
+            break;
           }
           currentObj.output = error;
         });
