@@ -6,7 +6,7 @@
         <div class="control">
           <input class="input is-success" type="text" v-model="username" placeholder="Username" />
         </div>
-        <p class="help is-danger" v-for="error in errors.name">{{error}}</p>
+        <p class="help is-danger" v-for="error in errors.name" v-bind:key="error">{{error}}</p>
       </div>
 
       <div class="field">
@@ -20,7 +20,7 @@
             value
           />
         </div>
-        <p class="help is-danger" v-for="error in errors.email">{{error}}</p>
+        <p class="help is-danger" v-for="error in errors.email" v-bind:key="error">{{error}}</p>
       </div>
 
       <div class="field">
@@ -40,7 +40,7 @@
             placeholder="Password"
           />
         </div>
-        <p class="help is-danger" v-for="error in errors.password">{{error}}</p>
+        <p class="help is-danger" v-for="error in errors.password" v-bind:key="error">{{error}}</p>
       </div>
 
       <div class="field is-grouped is-grouped-right">
@@ -56,7 +56,7 @@
 export default {
   data() {
     return {
-      errors: {},
+      errors: { name: [], password: [], email: [] },
       username: "",
       email: "",
       password: "",
