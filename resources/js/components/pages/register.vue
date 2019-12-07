@@ -6,6 +6,7 @@
         <div class="control">
           <input class="input is-success" type="text" v-model="username" placeholder="Username" />
         </div>
+        <p class="help is-danger" v-for="error in errors.name">{{error}}</p>
       </div>
 
       <div class="field">
@@ -19,6 +20,7 @@
             value
           />
         </div>
+        <p class="help is-danger" v-for="error in errors.email">{{error}}</p>
       </div>
 
       <div class="field">
@@ -38,6 +40,7 @@
             placeholder="Password"
           />
         </div>
+        <p class="help is-danger" v-for="error in errors.password">{{error}}</p>
       </div>
 
       <div class="field is-grouped is-grouped-right">
@@ -53,6 +56,7 @@
 export default {
   data() {
     return {
+      errors: {},
       username: "",
       email: "",
       password: "",
@@ -80,8 +84,8 @@ export default {
           router.replace("/");
         })
         .catch(function(error) {
-          alert("Register failed");
-          console.log("err", error);
+          let errors = error.response.data.errors;
+          currentObj.errors = errors;
           currentObj.output = error;
         });
     }
