@@ -19,7 +19,7 @@
 
     <div class="navbar-menu">
       <div class="navbar-end">
-        <menu-link link="poll">Create a poll</menu-link>
+        <menu-link link="create-poll">Create a poll</menu-link>
 
         <menu-link link="groups">Groups</menu-link>
 
