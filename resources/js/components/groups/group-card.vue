@@ -14,7 +14,7 @@
       </a>
     </span>
     <span class="poll-card-action">
-      <a href="#">
+      <a href="#" v-on:click="editRatingsFunction(group.id)">
         <i class="fa fa-star"></i> Stars
       </a>
     </span>
@@ -24,7 +24,7 @@
 <script>
 export default {
   props: [
-      "group", "editFunction", "deleteFunction"
+      "group", "editFunction", "deleteFunction", "editRatingsFunction",
   ],
 };
 </script>

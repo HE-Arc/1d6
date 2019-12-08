@@ -1,7 +1,7 @@
 <template>
   <span class="list-item">
     <span class="text">
-      <slot></slot>
+      <slot/>
     </span>
     <span class="stars">
       <star-rating v-model="stars" :increment="0.5" :show-rating="false" :star-size="20"></star-rating>
@@ -16,7 +16,11 @@ export default {
   components: {
     StarRating
   },
-  props: ["stars"]
+  data() {
+    return {
+      stars: 10,
+    }
+  }
 };
 </script>
 

@@ -1,6 +1,6 @@
 <template>
 <span class="list-item">
-    <slot></slot>
+    <slot/>
     <a v-bind:class="{'is-active' : cannotDelete}" href="#" class="delete-item" v-on:click="deleteEntry()">
     <i v-if="!cannotDelete" class="fa fa-trash"></i>
     </a>
