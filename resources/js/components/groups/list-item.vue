@@ -21,7 +21,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 
 .group-item-list {
   max-height: 200px;

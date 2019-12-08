@@ -53,3 +53,8 @@
     display: block;
     font-size: 1.3em;
 }
+
+.navbar-menu.is-active {
+    position: fixed;
+    width: 100%;
+}

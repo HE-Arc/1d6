@@ -1,6 +1,6 @@
 <template>
   <default-layout>
-    <modal ref="modal">
+    <modal ref="groupModal">
       <label class="label">Group name</label>
       <input
         type="text"
@@ -14,7 +14,7 @@
             icon="fa-user-plus"
             placeholder="Member name"
             content-type="users"
-            ref="group-users"
+            ref="groupUsers"
           >Members</select-list>
         </div>
         <div class="column is-half">
@@ -22,11 +22,18 @@
             icon="fa-plus"
             placeholder="Item name"
             content-type="items"
-            ref="group-items"
+            ref="groupItems"
           >Default items</select-list>
         </div>
       </div>
     </modal>
+
+    <modal ref="ratingsModal">
+      <div class="item-list">
+        <select-ratings ref="ratingsList">Ratings</select-ratings>
+      </div>
+    </modal>
+
     <h1>Your groups</h1>
     <div
       class="columns is-multiline is-1-mobile is-0-tablet is-3-desktop is-8-widescreen container-container"
@@ -37,6 +44,7 @@
         v-bind:group="group"
         :edit-function="editGroup"
         :delete-function="deleteGroup"
+        :edit-ratings-function="editRatings"
       ></group-card>
     </div>
     <button class="button is-primary is-rounded floating-button" v-on:click="createGroup">New group</button>
@@ -47,12 +55,14 @@
 import modal from "../modal";
 import selectList from "../groups/select-list";
 import groupCard from "../groups/group-card";
+import selectRatings from "../items/select-ratings";
 
 export default {
   components: {
     modal,
     selectList,
-    groupCard
+    groupCard,
+    selectRatings
   },
   data() {
     return {
@@ -65,16 +75,24 @@ export default {
     };
   },
   methods: {
+    populateAndDisplayGroupModal: function() {
+      this.$refs.groupName = this.currentGroup.name;
+      this.$refs.groupUsers.unremovableItems = ["You"];
+      this.$refs.groupItems.items = this.currentGroup.items;
+      this.$refs.groupUsers.items = this.currentGroup.users;
+
+      this.$refs.groupModal.active = true;
+    },
     createGroup: function() {
       this.currentGroup.name = "";
       this.currentGroup.users = [];
       this.currentGroup.items = [];
 
-      this.$refs.modal.title = "Create a new group";
-      this.$refs.modal.saveText = "Create";
-      this.$refs.modal.saveFunction = this.addGroup;
+      this.$refs.groupModal.title = "Create a new group";
+      this.$refs.groupModal.saveText = "Create";
+      this.$refs.groupModal.saveFunction = this.addGroup;
 
-      this.populateAndDisplayModal();
+      this.populateAndDisplayGroupModal();
     },
     editGroup: function(id) {
       // TODO: get group from API using id
@@ -88,19 +106,28 @@ export default {
         1
       );
 
-      this.$refs.modal.title = "Edit group";
-      this.$refs.modal.saveText = "Save";
-      this.$refs.modal.saveFunction = this.saveGroup;
+      this.$refs.groupModal.title = "Edit group";
+      this.$refs.groupModal.saveText = "Save";
+      this.$refs.groupModal.saveFunction = this.saveGroup;
 
-      this.populateAndDisplayModal();
+      this.populateAndDisplayGroupModal();
     },
-    populateAndDisplayModal: function() {
-      this.$refs["group-name"] = this.currentGroup.name;
-      this.$refs["group-users"].unremovableItems = ["You"];
-      this.$refs["group-items"].items = this.currentGroup.items;
-      this.$refs["group-users"].items = this.currentGroup.users;
+    editRatings: function(id) {
+      // TODO: get default ratings from user for this group's items from API using id
+      let defaultRatings = this.groups
+        .find(group => group.id === id)
+        .items.map(item => {
+          return { name: item, rating: (Math.random() * 21) / 4 };
+        });
 
-      this.$refs.modal.active = true;
+      console.log(defaultRatings)
+
+      this.$refs.ratingsList.items = defaultRatings;
+      this.$refs.ratingsModal.title = "Edit your default ratings";
+      this.$refs.ratingsModal.saveText = "Save";
+      this.$refs.ratingsModal.saveFunction = () => {} // TODO
+
+      this.$refs.ratingsModal.active = true;
     },
     addGroup: function() {
       this.currentGroup.users = this.currentGroup.users.map(username => {
@@ -153,7 +180,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .input-group-name {
   margin-bottom: 20px;
   width: auto;
@@ -167,5 +194,10 @@ export default {
 .delete-item {
   margin-right: 12px;
   float: right;
+}
+
+.item-list {
+  max-height: 400px;
+  overflow: auto;
 }
 </style>
