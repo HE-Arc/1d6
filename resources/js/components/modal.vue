@@ -19,10 +19,12 @@
 
 <script>
 export default {
-  props: ["title", "saveText", "saveFunction"],
   data() {
     return {
-      active: false
+      active: false,
+      title: "Title",
+      saveText: "Save",
+      saveFunction: () => {}
     };
   },
   methods: {
@@ -30,7 +32,6 @@ export default {
       this.active = false;
     },
     save: function() {
-      console.log(this.saveFunction);
       this.saveFunction();
       this.close();
     }

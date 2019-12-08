@@ -1,11 +1,6 @@
 <template>
   <default-layout>
-    <modal
-      title="Create a new group"
-      save-text="Create group"
-      :save-function="addGroup"
-      ref="modal"
-    >
+    <modal ref="modal">
             <label class="label">Group name</label>
       <input
         type="text"
