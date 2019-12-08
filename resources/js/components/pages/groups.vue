@@ -77,7 +77,7 @@ export default {
   methods: {
     populateAndDisplayGroupModal: function() {
       this.$refs.groupName = this.currentGroup.name;
-      this.$refs.groupUsers.unremovableItems = ["You"];
+      this.$refs.groupUsers.unremovableItems = [localStorage.getItem("username") + " (you)"];
       this.$refs.groupItems.items = this.currentGroup.items;
       this.$refs.groupUsers.items = this.currentGroup.users;
 
