@@ -4,12 +4,12 @@
     <b>{{group.users.length}}</b> members
     <br />
     <span class="poll-card-action">
-      <a href="#">
+      <a href="#" v-on:click="editFunction(group.id)">
         <i class="fa fa-edit"></i> Edit
       </a>
     </span>
     <span class="poll-card-action">
-      <a href="#">
+      <a href="#" v-on:click="deleteFunction(group.id)">
         <i class="fa fa-trash"></i> Delete
       </a>
     </span>
@@ -24,7 +24,7 @@
 <script>
 export default {
   props: [
-      "group",
+      "group", "editFunction", "deleteFunction"
   ],
 };
 </script>
