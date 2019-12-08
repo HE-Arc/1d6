@@ -60,6 +60,7 @@ export default {
           // TODO: DO NOT USE LOCALSTORAGE, it's less safe than cookies for storing tokens
           // TODO: Handle errors, and success, and querying animation
           // This would not be done in a "real" application
+          localStorage.setItem("username", response.data.data.name);
           localStorage.setItem("apiToken", response.data.data.api_token);
           router.replace("/");
         })

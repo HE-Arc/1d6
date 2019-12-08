@@ -4,7 +4,7 @@
       <slot />
     </label>
     <div class="list is-hoverable item-list">
-      <list-item v-for="item in items" v-bind:key="item.index" :stars="item.stars">{{ item.name }}</list-item>
+      <list-item v-for="item in items" v-bind:key="item.index" :stars="item.rating">{{ item.name }}</list-item>
     </div>
   </span>
 </template>
