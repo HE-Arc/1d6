@@ -20,6 +20,9 @@ class ItemResource extends JsonResource
             'description' => $this->description,
             'url' => $this->url,
             'image_url' =>$this->image_url,
+            'users' => UserResource::collection($this->whenLoaded('users')),
+            'polls' => ItemResource::collection($this->whenLoaded('polls')),
+            'groups' => ItemResource::collection($this->whenLoaded('groups')),
         ];
     }
 }

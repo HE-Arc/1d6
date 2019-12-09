@@ -49,12 +49,12 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  User  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(User $user)
+    public function show($user)
     {
-        return UserResource(User::with('groups', 'items', 'polls')->find($user));
+        return new UserResource(User::with('groups', 'items', 'polls')->find($user));
     }
 
     /**

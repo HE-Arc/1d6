@@ -40,7 +40,7 @@ class GroupController extends Controller
             $group->items()->attach($item);
         }
     
-        return new GroupResource($group);
+        return new GroupResource(Group::with('users', 'items')->find($group));
     }
 
     /**
