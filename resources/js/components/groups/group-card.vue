@@ -23,8 +23,6 @@
 
 <script>
 export default {
-  props: [
-      "group", "editFunction", "deleteFunction", "editRatingsFunction",
-  ],
+  props: ["group", "editFunction", "deleteFunction", "editRatingsFunction"]
 };
 </script>

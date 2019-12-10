@@ -77,7 +77,9 @@ export default {
   methods: {
     populateAndDisplayGroupModal: function() {
       this.$refs.groupName = this.currentGroup.name;
-      this.$refs.groupUsers.unremovableItems = [localStorage.getItem("username") + " (you)"];
+      this.$refs.groupUsers.unremovableItems = [
+        localStorage.getItem("username") + " (you)"
+      ];
       this.$refs.groupItems.items = this.currentGroup.items;
       this.$refs.groupUsers.items = this.currentGroup.users;
 
@@ -114,13 +116,7 @@ export default {
     },
     editRatings: function(id) {
       // TODO: get default ratings from user for this group's items from API using id
-      let defaultRatings = this.groups
-        .find(group => group.id === id)
-        .items.map(item => {
-          return { name: item, rating: (Math.random() * 21) / 4 };
-        });
-
-      console.log(defaultRatings)
+      let defaultRatings = this.groups.find(group => group.id === id).items;
 
       this.$refs.ratingsList.items = defaultRatings;
       this.$refs.ratingsModal.title = "Edit your default ratings";
@@ -170,7 +166,7 @@ export default {
     this.groups.push({
       name: "Groupe A",
       users: [{ name: "1d6", admin: true }, { name: "Patrick", admin: false }],
-      items: ["paprika", "parpika"],
+      items: [{ name: "paprika", rating: 9 }, { name: "parpika", rating: 2 }],
       id: 1
     });
     this.groups.push({
@@ -180,8 +176,22 @@ export default {
         { name: "Jean", admin: false },
         { name: "Valjean", admin: false }
       ],
-      items: ["un bras", "une jambe"],
+      items: [
+        { name: "un bras", rating: 4 },
+        { name: "une jambe", rating: 7 },
+        { name: "un ventre", rating: 9 }
+      ],
       id: 2
+    });
+    this.groups.push({
+      name: "Groupe C",
+      users: [
+        { name: "1d6", admin: true },
+        { name: "Jean", admin: false },
+        { name: "Valjean", admin: false }
+      ],
+      items: [],
+      id: 3
     });
   }
 };

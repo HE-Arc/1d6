@@ -24,6 +24,7 @@ export default {
       active: false,
       title: "Title",
       saveText: "Save",
+      saveFunction: () => {},
       closeFunction: () => {}
     };
   },
@@ -36,6 +37,6 @@ export default {
       this.saveFunction();
       this.close();
     }
-  },
+  }
 };
 </script>

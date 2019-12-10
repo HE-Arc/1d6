@@ -5,7 +5,11 @@
         <slot />
       </label>
       <div class="list is-hoverable group-item-list">
-        <list-item cannot-delete="cannot-delete" v-for="item in unremovableItems" v-bind:key="item.index">{{ item }}</list-item>
+        <list-item
+          cannot-delete="cannot-delete"
+          v-for="item in unremovableItems"
+          v-bind:key="item.index"
+        >{{ item }}</list-item>
         <list-item v-for="item in items" v-bind:key="item.index">{{ item }}</list-item>
       </div>
       <div class="field has-addons">
@@ -39,8 +43,12 @@ export default {
   },
   methods: {
     addToList() {
-      if (!this.items.includes(this.currentValue) && itemExists[this.$props.contentType](this.currentValue)) {
+      if (
+        !this.items.includes(this.currentValue) &&
+        itemExists[this.$props.contentType](this.currentValue)
+      ) {
         this.items.push(this.currentValue);
+        // TODO: add item to DB using the API
       }
       this.currentValue = "";
     }
@@ -48,7 +56,7 @@ export default {
 };
 
 let itemExists = {
-  "users": function(username) {
+  users: function(username) {
     return true;
     // this.axios
     //   .get(this.axios.defaults.baseURL + "/users", {
@@ -61,10 +69,10 @@ let itemExists = {
     //     return false;
     //   });
   },
-  "items": function(itemname) {
+  items: function(itemname) {
     return true;
   }
-}
+};
 </script>
 
 <style scoped>
