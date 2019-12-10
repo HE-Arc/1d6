@@ -60,8 +60,11 @@ class GroupController extends Controller
     {
         $group->update($request->only(['name']));
 
-        update($group->users(), $request->users, false, "admin");
-        update($group->items(), $request->items);
+        update($group->users(), $request->usersToAdd, false, "admin");
+        update($group->items(), $request->itemsToAdd);
+
+        update($group->users(), $request->usersToRemove, true);
+        update($group->items(), $request->itemsToRemove, true);
 
         return new GroupResource($group);
     }
