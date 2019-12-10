@@ -20,6 +20,7 @@ let currentAngle = Math.PI * 0.5;
 let targetAngle = Math.PI * 0.5;
 let ctx, canvas;
 let items = [];
+let totalWeight = 0;
 
 // Get a center point and a radius for a given canvas. Circle will fit in the center of the canvas
 function getCircle() {
@@ -31,8 +32,20 @@ function getCircle() {
 }
 
 // Start spinning the wheel
-function spin(targetWeight) {
-  targetAngle = toRad(0.75 - targetWeight + ROTATION_COUNT);
+function spin(itemName) {
+  let target = 0;
+
+  for (let i = 0; i < items.length; i++) {
+    const item = items[i];
+    if (item.name === itemName) {
+      // Make sure random is between 0.01 and 0.99 to make people not go crazy
+      target += Math.random() * item.weight * 0.98 + item.weight * 0.01;
+      break;
+    }
+    target += item.weight;
+  }
+  
+  targetAngle = toRad(0.75 - target / totalWeight + ROTATION_COUNT);
   currentAngle = Math.PI * 0.5;
   render();
 }
@@ -40,7 +53,8 @@ function spin(targetWeight) {
 // Calculate where the wheel should stop
 function handleWheelRotation() {
   let t = (currentAngle + 1) / targetAngle;
-  currentAngle += DECELERATION_COEFF * t * (3 - 2 * t) * (targetAngle - currentAngle); //(t * t * (3 - 2 * t)) * targetAngle;
+  currentAngle +=
+    DECELERATION_COEFF * t * (3 - 2 * t) * (targetAngle - currentAngle); //(t * t * (3 - 2 * t)) * targetAngle;
 
   return targetAngle !== currentAngle;
 }
@@ -63,6 +77,8 @@ function drawPiePart(c, start, size, color, radius, lineWidth) {
 function render() {
   const c = getCircle();
 
+  totalWeight = computeTotalWeight();
+
   renderBackground(c);
   renderItems(c);
 
@@ -76,6 +92,10 @@ function render() {
 
 function toRad(x) {
   return x * 2 * Math.PI;
+}
+
+function computeTotalWeight() {
+  return items.map(item => item.weight).reduce((x, y) => x + y, 0);
 }
 
 // Render all items present in the pie. Weights must sum up to 1!
@@ -94,12 +114,12 @@ function renderItems(c) {
 
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
-
+    const weight = item.weight / totalWeight;
     // Pie parts
     drawPiePart(
       c,
       sum,
-      item.weight,
+      weight,
       colors[i % colors.length],
       c.r * 0.75,
       c.r * 0.5
@@ -107,12 +127,12 @@ function renderItems(c) {
 
     const angleInWeight =
       1 - ((currentAngle + Math.PI * 0.5) % (2 * Math.PI)) / (2 * Math.PI);
-    if (angleInWeight > sum && angleInWeight <= sum + item.weight) {
+    if (angleInWeight > sum && angleInWeight <= sum + weight) {
       currentItemText = item.name;
       currentItemColor = colors[i % colors.length];
     }
 
-    sum += item.weight;
+    sum += weight;
 
     drawPiePartText(ctx, c, sum, item);
   }
@@ -141,7 +161,8 @@ function renderItems(c) {
 }
 
 function drawPiePartText(ctx, c, sum, item) {
-  ctx.rotate(toRad(sum - item.weight / 2));
+  const weight = item.weight / totalWeight;
+  ctx.rotate(toRad(sum - weight / 2));
 
   ctx.fillStyle = "black";
 
@@ -154,7 +175,7 @@ function drawPiePartText(ctx, c, sum, item) {
   ctx.font = fontSize + "px Helvetica,Arial,sans-serif";
   ctx.fillText(item.name, c.r * 0.75, 0, c.r * 0.5 - 5);
 
-  ctx.rotate(-toRad(sum - item.weight / 2));
+  ctx.rotate(-toRad(sum - weight / 2));
 }
 
 function renderBackground(c) {
@@ -174,7 +195,7 @@ function renderBackground(c) {
 
 export default {
   methods: {
-    "spin": spin
+    spin: spin
   },
   mounted() {
     canvas = document.getElementById("wheel-canvas");
@@ -188,9 +209,7 @@ export default {
 
     render();
   },
-  props: [
-    "items"
-  ],
+  props: ["items"],
   watch: {
     items: () => {
       render();

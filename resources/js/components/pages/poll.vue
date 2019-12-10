@@ -47,9 +47,9 @@ export default {
   methods: {
     spinWheel() {
       // TODO: Only send data to server, use a timeout to retrieve eventual score / items
-      //this.items.push({ name: "Paprika", weight: 0.2 });
+
       //this.items[2].weight = 0.4;
-      wheel.methods.spin(0.2);
+      wheel.methods.spin("Vegan");
     }
   },
   components: {
