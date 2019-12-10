@@ -14,13 +14,13 @@
       <div class="column is-two-third has-border">
         <h1>Poll</h1>
         <div class="canvas-container">
-          <wheel></wheel>
+          <wheel :items="items"></wheel>
           <div class="vote-status">
             <b>3 / 4</b>
             <i class="fa fa-users"></i>
           </div>
           <div class="buttons has-addons is-centered">
-            <button type="submit" class="button is-info">Spin the wheel</button>
+            <button type="submit" v-on:click="spinWheel" class="button is-info">Spin the wheel</button>
             <!--
             <button type="submit" class="button is-light">Waiting for owner to spin the wheel</button>
             -->
@@ -35,12 +35,30 @@ import selectRatings from "../items/select-ratings";
 import wheel from "../wheel";
 
 export default {
+  data() {
+    return {
+      items: [
+        { name: "King Food", weight: 0.2 },
+        { name: "Coop", weight: 0.2 },
+        { name: "Vegan", weight: 0.6 }
+      ]
+    };
+  },
+  methods: {
+    spinWheel() {
+      // TODO: Only send data to server, use a timeout to retrieve eventual score / items
+      //this.items.push({ name: "Paprika", weight: 0.2 });
+      //this.items[2].weight = 0.4;
+      wheel.methods.spin(0.2);
+    }
+  },
   components: {
     selectRatings,
     wheel
   },
   middleware: "auth"
 };
+console.log(wheel);
 </script>
 
 <style scoped>

@@ -173,6 +173,9 @@ function renderBackground(c) {
 }
 
 export default {
+  methods: {
+    "spin": spin
+  },
   mounted() {
     canvas = document.getElementById("wheel-canvas");
     ctx = canvas.getContext("2d");
@@ -181,14 +184,17 @@ export default {
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.width;
 
-    render(ctx, canvas, [
-      { name: "King Food", weight: 0.05 }, // < 0.05
-      { name: "Coop", weight: 0.1 }, // < 0.15
-      { name: "Piadina", weight: 0.1 }, // 0.25
-      { name: "EatEco - Best burgers in Neuchatel", weight: 0.4 }, // < 0.65
-      { name: "Mc Donalds", weight: 0.05 }, // < 0.7
-      { name: "Paprika", weight: 0.3 } // < 1.0
-    ]);
+    items = this.items;
+
+    render();
+  },
+  props: [
+    "items"
+  ],
+  watch: {
+    items: () => {
+      render();
+    }
   }
 };
 </script>
