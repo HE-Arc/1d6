@@ -41,7 +41,7 @@
 export default {
   data() {
     return {
-      errors: {email: [], password: []},
+      errors: { email: [], password: [] },
       email: "",
       password: ""
     };
