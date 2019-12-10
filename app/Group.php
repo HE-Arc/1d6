@@ -18,6 +18,11 @@ class Group extends Model
      */
     public function users()
     {
-        return $this->belongsToMany('App\User', 'group_users');
+        return $this->belongsToMany('App\User', 'group_users')->withPivot('admin');
+    }
+
+    public function items()
+    {
+        return $this->belongsToMany('App\Item', 'group_items');
     }
 }

@@ -11,7 +11,7 @@ class Item extends Model
      * 
      * @var array
      */
-    protected $attributes = [
+    protected $fillable = [
         'name',
         'description',
         'url',
@@ -23,6 +23,16 @@ class Item extends Model
      */
     public function groups() 
     {
-        return $this->belongsToMany('App\Groups', 'group_items');
+        return $this->belongsToMany('App\Group', 'group_items');
+    }
+
+    public function polls()
+    {
+        return $this->belongsToMany('App\Poll', 'poll_items');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany('App\User', 'item_default_ratings')->withPivot('rating');
     }
 }

@@ -21,3 +21,8 @@ Route::group(["middleware" => 'auth:api'], function () {
     Route::post('logout', 'Auth\LoginController@logout');
     // TODO: Authenticated routes here
 });
+
+Route::apiResource('items', 'ItemController');
+Route::apiResource('polls', 'PollController');
+Route::apiResource('groups', 'GroupController');
+Route::apiResource('users', 'UserController');
