@@ -34,16 +34,11 @@ class UserController extends Controller
             'password' => $request->password,
         ]);
 
-        foreach (explode(',', $request->groups) as $group) {
-            $user->groups()->attach($group);
-        }
-        foreach (explode(',', $request->items) as $item) {
-            $user->items()->attach($item);
-        }
-        foreach (explode(',', $request->polls) as $poll) {
-            $user->polls()->attach($poll);
-        }
-        return new UserResource($user);
+        attach($user->groups(), $request->groups);
+        attach($user->items(), $request->items, "rating");
+        attach($user->polls(), $request->polls);
+
+        return new UserResource(User::with('groups', 'items', 'polls')->find($user->id));
     }
 
     /**
@@ -68,7 +63,15 @@ class UserController extends Controller
     {
         $user->update($request->only(['name', 'email']));
 
-        return new UserResource($user);
+        update($user->items(), $request->usersToAdd, false, "rating");
+        update($user->polls(), $request->pollsToAdd);
+        update($user->groups(), $request->groupsToAdd);
+
+        update($user->items(), $request->usersToRemove, true);
+        update($user->polls(), $request->pollsToRemove, true);
+        update($user->groups(), $request->groupsToRemove, true);
+
+        return new UserResource(User::with('groups', 'items', 'polls')->find($user->id));
     }
 
     /**

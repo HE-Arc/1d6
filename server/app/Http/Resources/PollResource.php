@@ -18,6 +18,8 @@ class PollResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'url' => $this->url,
+            'users' => UserResource::collection($this->whenLoaded('users')),
+            'items' => ItemResource::collection($this->whenLoaded('items')),
         ];
     }
 }

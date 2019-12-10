@@ -22,7 +22,7 @@ class ItemResource extends JsonResource
             'image_url' =>$this->image_url,
             'users' => UserResource::collection($this->whenLoaded('users')),
             'polls' => ItemResource::collection($this->whenLoaded('polls')),
-            'groups' => ItemResource::collection($this->whenLoaded('groups')),
+            'groups' => GroupResource::collection($this->whenLoaded('groups')),
         ];
     }
 }

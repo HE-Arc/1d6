@@ -31,16 +31,11 @@ class GroupController extends Controller
         $group = Group::create([
             'name' => $request->name, 
           ]);
-        foreach (explode(',',$request->users) as $user)
-        {
-            $group->users()->attach($user, ["admin" => false]); // TODO : deal with admin rights
-        }
-        foreach (explode(',',$request->items) as $item)
-        {
-            $group->items()->attach($item);
-        }
+
+        attach($group->users(), $request->users, "admin");
+        attach($group->items(), $request->items);
     
-        return new GroupResource(Group::with('users', 'items')->find($group));
+        return new GroupResource(Group::with('users', 'items')->find($group->id));
     }
 
     /**
@@ -64,6 +59,9 @@ class GroupController extends Controller
     public function update(Request $request, Group $group)
     {
         $group->update($request->only(['name']));
+
+        update($group->users(), $request->users, false, "admin");
+        update($group->items(), $request->items);
 
         return new GroupResource($group);
     }

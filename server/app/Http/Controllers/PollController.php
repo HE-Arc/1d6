@@ -17,7 +17,7 @@ class PollController extends Controller
      */
     public function index()
     {
-        return PollResource::collection(Poll::all());
+        return PollResource::collection(Poll::with('users', 'items')->paginate(25));
     }
 
     /**
@@ -32,8 +32,10 @@ class PollController extends Controller
             'name' => $request->name,
             'url' => $request->url,
           ]);
+        attach($poll->users(), $request->users);
+        attach($poll->items(), $request->items);
     
-        return new PollResource($poll);
+        return new PollResource(Poll::with('users', 'items')->find($poll->id));
     }
 
     /**
@@ -42,9 +44,9 @@ class PollController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Poll $poll)
+    public function show($poll)
     {
-        return new PollResource($poll);
+        return new PollResource(Poll::with('users', 'items')->find($poll));
     }
 
     /**
@@ -58,7 +60,13 @@ class PollController extends Controller
     {
         $poll->update($request->only(['name','url']));
 
-        return new PollResource($poll);
+        update($poll->users(), $request->usersToAdd);
+        update($poll->items(), $request->pollsToAdd);
+
+        update($poll->users(), $request->usersToRemove, true);
+        update($poll->items(), $request->pollsToRemove, true);
+
+        return new PollResource(Poll::with('users', 'items')->find($poll->id));
     }
 
     /**
