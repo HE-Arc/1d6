@@ -1,0 +1,41 @@
+<template>
+  <span class="list-item">
+    <span class="text">
+      <slot/>
+    </span>
+    <span class="stars">
+      <star-rating v-model="stars" :increment="0.5" :show-rating="false" :star-size="20"></star-rating>
+    </span>
+  </span>
+</template>
+
+<script>
+import StarRating from "vue-star-rating";
+
+export default {
+  components: {
+    StarRating
+  },
+  data() {
+    return {
+      stars: 10,
+    }
+  }
+};
+</script>
+
+<style scoped>
+@media only screen and (min-width: 1600px) {
+  .stars {
+    float: right;
+  }
+
+  .text {
+    display: inline-block;
+    max-width: calc(100% - 120px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+</style>
