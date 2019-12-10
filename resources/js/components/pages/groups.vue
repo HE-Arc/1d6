@@ -125,7 +125,14 @@ export default {
       this.$refs.ratingsList.items = defaultRatings;
       this.$refs.ratingsModal.title = "Edit your default ratings";
       this.$refs.ratingsModal.saveText = "Save";
-      this.$refs.ratingsModal.saveFunction = () => {} // TODO
+
+      this.$refs.ratingsModal.closeFunction = () => {
+        this.$refs.ratingsList.items = [];
+      };
+      this.$refs.ratingsModal.saveFunction = (rating, item) => {
+        // TODO: actually modify the DB using the API
+        this.currentGroup.items = defaultRatings;
+      };
 
       this.$refs.ratingsModal.active = true;
     },

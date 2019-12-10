@@ -24,12 +24,13 @@ export default {
       active: false,
       title: "Title",
       saveText: "Save",
-      saveFunction: () => {}
+      closeFunction: () => {}
     };
   },
   methods: {
     close: function() {
       this.active = false;
+      this.closeFunction();
     },
     save: function() {
       this.saveFunction();
