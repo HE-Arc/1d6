@@ -58,7 +58,7 @@ export default {
   },
   middleware: "auth"
 };
-console.log(wheel);
+
 </script>
 
 <style scoped>
