@@ -82,7 +82,7 @@ export default {
       let currentObj = this;
       let router = this.$router;
       this.axios
-        .post(this.axios.defaults.baseURL + "/register", {
+        .post("/register", {
           email: this.email,
           name: this.username,
           password: this.password,

@@ -165,7 +165,7 @@ export default {
     this.groups = [];
     let currentObj = this;
     this.axios
-      .get(this.axios.defaults.baseURL + "/users/" + localStorage.getItem("id"))
+      .get("/users/" + localStorage.getItem("id"))
       .then(function(response) {
         currentObj.groups = response.data.data.groups;
       })
