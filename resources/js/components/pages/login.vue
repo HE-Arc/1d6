@@ -61,6 +61,7 @@ export default {
           // TODO: Handle errors, and success, and querying animation
           // This would not be done in a "real" application
           localStorage.setItem("username", response.data.data.name);
+          localStorage.setItem("id", response.data.data.id);
           localStorage.setItem("apiToken", response.data.data.api_token);
           router.replace("/");
         })

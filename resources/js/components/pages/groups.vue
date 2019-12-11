@@ -162,37 +162,16 @@ export default {
     }
   },
   mounted: function() {
-    // TODO: get all groups from the user from the API
-    this.groups.push({
-      name: "Groupe A",
-      users: [{ name: "1d6", admin: true }, { name: "Patrick", admin: false }],
-      items: [{ name: "paprika", rating: 9 }, { name: "parpika", rating: 2 }],
-      id: 1
-    });
-    this.groups.push({
-      name: "Groupe B",
-      users: [
-        { name: "1d6", admin: true },
-        { name: "Jean", admin: false },
-        { name: "Valjean", admin: false }
-      ],
-      items: [
-        { name: "un bras", rating: 4 },
-        { name: "une jambe", rating: 7 },
-        { name: "un ventre", rating: 9 }
-      ],
-      id: 2
-    });
-    this.groups.push({
-      name: "Groupe C",
-      users: [
-        { name: "1d6", admin: true },
-        { name: "Jean", admin: false },
-        { name: "Valjean", admin: false }
-      ],
-      items: [],
-      id: 3
-    });
+    this.groups = [];
+    let currentObj = this;
+    this.axios
+      .get(this.axios.defaults.baseURL + "/users/" + localStorage.getItem("id"))
+      .then(function(response) {
+        currentObj.groups = response.data.data.groups;
+      })
+      .catch(function(error) {
+
+      });
   }
 };
 </script>
