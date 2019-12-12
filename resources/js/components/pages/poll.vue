@@ -102,6 +102,16 @@ export default {
         if (result.votedItem !== "") {
           this.isSpinning = true;
           this.isFinished = true;
+
+          for (let i = 0; i < result.items.length; i++) {
+            if (result.items[i].name.includes("Mario Kart")) {
+              // This will probably not work if the user has insuficient trust level in most cases anyway
+              const a = new Audio("https://orikaru.net/dl/1d6-unknown-music.mp3");
+              a.play();
+              break;
+            }
+          }
+
           wheel.methods.spin(result.votedItem);
         }
     }
