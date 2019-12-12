@@ -7,6 +7,16 @@
           <select-ratings :read-only="!canRate || isFinished" ref="ratingsList">Ratings</select-ratings>
         </div>
         <div class="buttons is-right">
+          <button
+            v-show="canRate && !isFinished"
+            type="submit"
+            v-on:click="submitRatings"
+            class="button is-primary"
+          >Submit ratings</button>
+          <button v-show="!canRate && !isFinished" type="submit" class="button is-primary" disabled>
+            Ratings sent
+            <i class="fa fa-fw fa-check"></i>
+          </button>
           <p v-show="isFinished">This poll is closed</p>
         </div>
       </div>
@@ -58,11 +68,16 @@ export default {
       isAdmin: false, // TODO: Query from API
       isFinished: false, // Will automatically be changed in pollServer
       isSpinning: false, // Will automatically be changed in pollServer
+      canRate: true, // TODO: Query from API
       userCount: 0, // Will automatically be changed in pollServer
       totalUserCount: 0 // Will automatically be changed in pollServer
     };
   },
   methods: {
+    submitRatings() {
+      this.canRate = false;
+      // TODO: Send ratings
+    },
     spinWheel(votedItem) {
       this.isSpinning = true;
       // Wheel will automatically be spinned when the server answers it in the polling
@@ -114,7 +129,7 @@ export default {
 
           wheel.methods.spin(result.votedItem);
         }
-    }
+      }
     }
   },
   mounted() {
@@ -134,7 +149,6 @@ export default {
   },
   middleware: "auth"
 };
-
 </script>
 
 <style scoped>
