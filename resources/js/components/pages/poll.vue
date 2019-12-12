@@ -7,8 +7,7 @@
           <select-ratings />
         </div>
         <div class="buttons is-right">
-          <button type="submit" class="button is-danger">Reset</button>
-          <button type="submit" class="button is-primary">Update ratings</button>
+          <button type="submit" class="button is-primary">Submit ratings</button>
         </div>
       </div>
       <div class="column is-two-third has-border">
