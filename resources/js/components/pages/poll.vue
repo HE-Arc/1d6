@@ -4,10 +4,10 @@
       <div class="column is-one-third">
         <h1>Your votes</h1>
         <div class="field">
-          <select-ratings :read-only="!canRate" ref="ratingsList">Ratings</select-ratings>
+          <select-ratings :read-only="!canRate || isFinished" ref="ratingsList">Ratings</select-ratings>
         </div>
         <div class="buttons is-right">
-          <button type="submit" class="button is-primary">Submit ratings</button>
+          <p v-show="isFinished">This poll is closed</p>
         </div>
       </div>
       <div class="column is-two-third has-border">
@@ -19,10 +19,8 @@
             <i class="fa fa-users"></i>
           </div>
           <div class="buttons has-addons is-centered">
-            <button type="submit" v-on:click="spinWheel" class="button is-info">Spin the wheel</button>
-            <!--
-            <button type="submit" class="button is-light">Waiting for owner to spin the wheel</button>
-            -->
+            <p v-show="isSpinning">Spinning the wheel!</p>
+            <p v-show="isFinished && !isSpinning">This poll is closed</p>
           </div>
         </div>
       </div>
@@ -33,18 +31,27 @@
 import selectRatings from "../items/select-ratings";
 import wheel from "../wheel";
 
+// TODO In a very very far furture, use websockets
+const POLLING_INTERVAL = 1000;
+
 export default {
   data() {
     return {
       items: [
+      isFinished: false, // Will automatically be changed in pollServer
+      isSpinning: false, // Will automatically be changed in pollServer
       userCount: 0, // Will automatically be changed in pollServer
       totalUserCount: 0 // Will automatically be changed in pollServer
     };
   },
   methods: {
+    spinWheel(votedItem) {
+      this.isSpinning = true;
+      // Wheel will automatically be spinned when the server answers it in the polling
+      // TODO: Send data to the server
+    },
     pollServer() {
-    spinWheel() {
-      // TODO: Only send data to server, use a timeout to retrieve eventual score / items
+      if (!this.isFinished) {
         // TODO: Query API and fill result
         const result = {
           totalUserCount: 5,
@@ -53,12 +60,16 @@ export default {
 
         this.totalUserCount = result.totalUserCount;
         this.userCount = result.userCount;
+        if (result.votedItem !== "") {
+          this.isFinished = true;
+        }
     }
   },
     this.pollServer();
     setInterval(() => {
       this.pollServer();
     }, POLLING_INTERVAL);
+  },
   components: {
     selectRatings,
     wheel
