@@ -15,7 +15,7 @@
         <div class="canvas-container">
           <wheel :items="items"></wheel>
           <div class="vote-status">
-            <b>3 / 4</b>
+            <b>{{userCount}} / {{totalUserCount}}</b>
             <i class="fa fa-users"></i>
           </div>
           <div class="buttons has-addons is-centered">
@@ -37,20 +37,28 @@ export default {
   data() {
     return {
       items: [
-        { name: "King Food", weight: 0.2 },
-        { name: "Coop", weight: 0.2 },
-        { name: "Vegan", weight: 0.6 }
-      ]
+      userCount: 0, // Will automatically be changed in pollServer
+      totalUserCount: 0 // Will automatically be changed in pollServer
     };
   },
   methods: {
+    pollServer() {
     spinWheel() {
       // TODO: Only send data to server, use a timeout to retrieve eventual score / items
+        // TODO: Query API and fill result
+        const result = {
+          totalUserCount: 5,
+          userCount: 2,
+        };
 
-      //this.items[2].weight = 0.4;
-      wheel.methods.spin("Vegan");
+        this.totalUserCount = result.totalUserCount;
+        this.userCount = result.userCount;
     }
   },
+    this.pollServer();
+    setInterval(() => {
+      this.pollServer();
+    }, POLLING_INTERVAL);
   components: {
     selectRatings,
     wheel
