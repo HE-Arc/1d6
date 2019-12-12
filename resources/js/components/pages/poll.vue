@@ -21,6 +21,18 @@
           <div class="buttons has-addons is-centered">
             <p v-show="isSpinning">Spinning the wheel!</p>
             <p v-show="isFinished && !isSpinning">This poll is closed</p>
+            <button
+              v-show="isAdmin && !isSpinning"
+              type="submit"
+              v-on:click="spinWheel"
+              class="button is-info"
+            >Spin the wheel</button>
+            <button
+              v-show="!isAdmin && !isFinished"
+              type="submit"
+              class="button is-light"
+              disabled
+            >Waiting for owner to spin the wheel</button>
           </div>
         </div>
       </div>
@@ -38,6 +50,12 @@ export default {
   data() {
     return {
       items: [
+        { name: "Loading...", weight: 0.2 },
+        { name: "Loading...", weight: 0.2 },
+        { name: "Loading...", weight: 0.2 },
+        { name: "Loading...", weight: 0.2 }
+      ],
+      isAdmin: false, // TODO: Query from API
       isFinished: false, // Will automatically be changed in pollServer
       isSpinning: false, // Will automatically be changed in pollServer
       userCount: 0, // Will automatically be changed in pollServer
@@ -56,15 +74,45 @@ export default {
         const result = {
           totalUserCount: 5,
           userCount: 2,
+          votedItem: "",
+          items: [
+            { name: "TODO: From API", weight: Math.random() },
+            { name: "EatEco", weight: Math.random() },
+            { name: "McDonalds", weight: Math.random() },
+            { name: "Coop", weight: Math.random() },
+            { name: "King Food", weight: Math.random() },
+            { name: "Caffet'", weight: Math.random() }
+          ]
         };
+
+        // TEMP: Randomly start the wheel
+        if (Math.random() > 0.8) {
+          result.votedItem = result.items[Math.floor(Math.random() * 6)];
+        }
 
         this.totalUserCount = result.totalUserCount;
         this.userCount = result.userCount;
+
+        // Prevents "unbinding" this.items
+        this.items.length = 0;
+        for (let i = 0; i < result.items.length; i++) {
+          this.items.push(result.items[i]);
+        }
+
         if (result.votedItem !== "") {
+          this.isSpinning = true;
           this.isFinished = true;
+          wheel.methods.spin(result.votedItem);
         }
     }
+    }
   },
+  mounted() {
+    // Note: this may not be the correct "vue" way of doing things? but that's how the ratingsList item component works
+    this.$refs.ratingsList.items = [
+      { name: "TODO: Load from API", rating: 10 }
+    ];
+
     this.pollServer();
     setInterval(() => {
       this.pollServer();
