@@ -7,6 +7,7 @@
       <list-item
         v-for="item in items"
         v-bind:key="item.index"
+        :read-only="readOnly"
         :initialRating="item.rating / 2"
         :save-function="saveFunction(item)"
       >{{ item.name }} {{item.rating / 2}}</list-item>
@@ -21,7 +22,7 @@ export default {
   components: {
     listItem
   },
-  props: ["icon", "placeholder"],
+  props: ["icon", "placeholder", "readOnly"],
   data: () => {
     return {
       items: [],

@@ -4,7 +4,7 @@
       <div class="column is-one-third">
         <h1>Your votes</h1>
         <div class="field">
-          <select-ratings />
+          <select-ratings :read-only="!canRate" ref="ratingsList">Ratings</select-ratings>
         </div>
         <div class="buttons is-right">
           <button type="submit" class="button is-primary">Submit ratings</button>
