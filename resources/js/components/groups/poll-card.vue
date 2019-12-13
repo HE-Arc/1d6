@@ -1,5 +1,8 @@
 <template>
-  <div class="column container-border container-active poll-card is-one-quarter">
+  <div
+    :class="{'container-active': !isClosed}"
+    class="column container-border poll-card is-one-quarter"
+  >
     <span class="header">{{name}}</span>
     <b>{{readyUserCount}} / {{totalUserCount}}</b> users voted
     <br />

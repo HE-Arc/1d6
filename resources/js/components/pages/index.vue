@@ -10,14 +10,9 @@
           :name="poll.name"
           :ready-user-count="poll.readyUserCount"
           :total-user-count="poll.totalUserCount"
+          :is-closed="0"
         />
       </span>
-      </div>
-      <div class="column container-border container-active poll-card is-one-quarter">
-        <span class="header">Film de lel</span>
-        <b>2 / 12</b> users voted<br>
-        <a href="#">Take part to the poll</a>
-      </div>
     </div>
     <h1>Past polls</h1>
     <div
@@ -29,17 +24,9 @@
           :name="poll.name"
           :ready-user-count="poll.readyUserCount"
           :total-user-count="poll.totalUserCount"
+          :is-closed="1"
         />
       </span>
-      </div>
-      <div class="column container-border poll-card is-one-quarter">
-        <span class="header">Mangeur de lel</span>
-        Poll ended on 10.12.2019<br>
-      </div>
-      <div class="column container-border poll-card is-one-quarter">
-        <span class="header">Mangeur de lel</span>
-        Poll ended on 10.12.2019<br>
-      </div>
     </div>
   </default-layout>
 </template>
@@ -75,5 +62,4 @@ export default {
 </script>
 
 <style>
-
 </style>
