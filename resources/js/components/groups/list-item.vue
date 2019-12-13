@@ -10,7 +10,7 @@
 <script>
 export default {
   components: {},
-  props: ["name", "cannotDelete"],
+  props: ["cannotDelete"],
   methods: {
     deleteEntry() {
       let items = this.$parent.items;

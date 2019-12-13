@@ -71,6 +71,7 @@ export default {
         users: [],
         items: []
       },
+      editedGroupReference: {},
       groups: []
     };
   },
@@ -97,22 +98,36 @@ export default {
       this.populateAndDisplayGroupModal();
     },
     editGroup: function(id) {
-      // TODO: get group from API using id
-      // this.currentGroup = this.axios.get(...)
       this.currentGroup = this.groups.find(group => group.id === id);
-      this.currentGroup.users = this.currentGroup.users.map(user => user.name);
+      let currentObj = this;
+      this.axios
+        .get("/groups/" + id)
+        .then(function(response) {
+          currentObj.currentGroup = response.data.data;
+          console.log(currentObj.currentGroup);
+          currentObj.editedGroupReference = JSON.parse(
+            JSON.stringify(currentObj.currentGroup)
+          );
 
-      // remove self from the list so that it doesn't appear twice
-      this.currentGroup.users.splice(
-        this.currentGroup.users.indexOf(localStorage.getItem("username")),
-        1
-      );
+          // remove self from the list so that it doesn't appear twice
+          currentObj.currentGroup.users.splice(
+            currentObj.currentGroup.users.findIndex(
+              user => user.id == localStorage.getItem("id")
+            ),
+            1
+          );
 
-      this.$refs.groupModal.title = "Edit group";
-      this.$refs.groupModal.saveText = "Save";
-      this.$refs.groupModal.saveFunction = this.saveGroup;
+          currentObj.$refs.groupModal.title = "Edit group";
+          currentObj.$refs.groupModal.saveText = "Save";
+          currentObj.$refs.groupModal.saveFunction = currentObj.saveGroup;
 
-      this.populateAndDisplayGroupModal();
+          currentObj.populateAndDisplayGroupModal();
+        })
+        .catch(function(error) {
+          // TODO: better error handling
+          alert("ERROR: Could not load group");
+          console.log(error);
+        });
     },
     editRatings: function(id) {
       // TODO: get default ratings from user for this group's items from API using id
@@ -142,23 +157,59 @@ export default {
       });
 
       // TODO: send this.currentGroup to the API
+      let currentObj = this;
+      this.axios.post("/groups").then;
       this.groups.push(this.currentGroup);
-      // console.log(this.currentGroup);
     },
     saveGroup: function() {
-      this.currentGroup.users = this.currentGroup.users.map(username => {
-        return { name: username, admin: false };
-      });
-      this.currentGroup.users.push({
-        name: localStorage.getItem("username"),
-        amdin: true
-      });
+      let request = {};
+      request.id = this.editedGroupReference.id;
+      request.name = this.currentGroup.name;
+      request.usersToAdd = [];
+      request.usersToRemove = [];
+      request.itemsToAdd = [];
+      request.itemsToRemove = [];
 
-      // TODO: patch the currentGroup via API
+      let oldUsers = new Set(this.editedGroupReference.users.map(user => user.id));
+      let newUsers = new Set(this.currentGroup.users.map(user => user.id));
+      let oldItems = new Set(this.editedGroupReference.items.map(item => item.id));
+      let newItems = new Set(this.currentGroup.items.map(item => item.id));
+
+      request.usersToAdd = difference(newUsers, oldUsers);
+      request.usersToRemove = difference(oldUsers, newUsers);
+      request.itemsToAdd = difference(newItems, oldItems);
+      request.itemsToRemove = difference(oldItems, newItems);
+
+      console.log("userstoadd")
+      console.log(request.usersToAdd)
+      console.log("userstoremove")
+      console.log(request.usersToRemove)
+      
+      
+      // this.axios
+      //   .put("/groups", this.currentGroup)
+      //   .then(function(response) {
+      //     // nothing ??? should be good already
+      //   })
+      //   .catch(function(error) {
+      //     // TODO: better error handling
+      //     alert("ERROR: Could not update group");
+      //   });
     },
     deleteGroup: function(id) {
-      // TODO: delete from DB via API
-      this.groups.splice(this.groups.findIndex(group => group.id === id), 1);
+      let currentObj = this;
+      this.axios
+        .delete("/groups/" + id)
+        .then(function(response) {
+          currentObj.groups.splice(
+            currentObj.groups.findIndex(group => group.id === id),
+            1
+          );
+        })
+        .catch(function(error) {
+          // TODO: better error handling
+          alert("ERROR: Could not delete group");
+        });
     }
   },
   mounted: function() {
@@ -168,12 +219,23 @@ export default {
       .get("/users/" + localStorage.getItem("id"))
       .then(function(response) {
         currentObj.groups = response.data.data.groups;
+        console.log(currentObj.groups);
       })
       .catch(function(error) {
-
+        // TODO: better error handling
+        alert("ERROR: Could not load groups");
       });
   }
 };
+
+function difference(setA, setB) {
+  let _difference = new Set(setA);
+  for (let elem of setB) {
+    _difference.delete(elem);
+  }
+  return _difference;
+}
+
 </script>
 
 <style scoped>
