@@ -44,7 +44,7 @@ const routes = [
     },
     {
         name: 'poll',
-        path: '/poll',
+        path: '/poll/:id',
         component: PollPage,
         meta: {
             middleware: auth

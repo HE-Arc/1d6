@@ -3,10 +3,10 @@
     <span class="header">{{name}}</span>
     <b>{{readyUserCount}} / {{totalUserCount}}</b> users voted
     <br />
-    <a href="#">
+    <router-link :to="{name: 'poll', params: {id: id}}">
       <span v-show="!isClosed">Take part to the poll</span>
       <span v-show="isClosed">View results</span>
-    </a>
+    </router-link>
   </div>
 </template>
 
