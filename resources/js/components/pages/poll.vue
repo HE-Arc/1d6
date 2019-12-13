@@ -133,6 +133,8 @@ export default {
     }
   },
   mounted() {
+    // TODO: Use this to get the group
+    //this.$route.params.id;
     // Note: this may not be the correct "vue" way of doing things? but that's how the ratingsList item component works
     this.$refs.ratingsList.items = [
       { name: "TODO: Load from API", rating: 10 }
