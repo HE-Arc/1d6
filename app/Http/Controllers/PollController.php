@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PollResourceLite;
 use App\Http\Resources\PollResource;
+use App\Http\Resources\PollCollection;
 use App\Poll;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PollController extends Controller
 {
@@ -17,7 +21,7 @@ class PollController extends Controller
      */
     public function index()
     {
-        return PollResource::collection(Poll::with('users', 'items')->paginate(25));
+        return new PollCollection(Poll::with('items')->paginate(25));
     }
 
     /**
@@ -30,12 +34,27 @@ class PollController extends Controller
     {
         $poll = Poll::create([
             'name' => $request->name,
-            'url' => $request->url,
+            'url' => ""
           ]);
-        attach($poll->users(), $request->users);
+        attach($poll->users(), $request->users, "admin");
         attach($poll->items(), $request->items);
-    
-        return new PollResource(Poll::with('users', 'items')->find($poll->id));
+
+        return response()->json();
+    }
+
+    /**
+     * Store a newly created rating in storage in the poll_ratings table.
+     *
+     * @param  \Illuminate\Http\Request  $request$
+     * @param  int  $pollId
+     * @return \Illuminate\Http\Response
+     */
+    public function rate(Request $request, int $pollId)
+    {
+        foreach(json_decode($request->ratings, true) as $rating)
+        {
+            DB::insert('insert into poll_ratings (poll_id, user_id, item_id, rating) values (?, ?, ?, ?)', [$pollId, Auth::id(), $rating['id'], $rating['rating']]);
+        }
     }
 
     /**
@@ -46,7 +65,18 @@ class PollController extends Controller
      */
     public function show($poll)
     {
-        return new PollResource(Poll::with('users', 'items')->find($poll));
+        return new PollResource(Poll::with('items')->find($poll));
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $poll
+     * @return \Illuminate\Http\Response
+     */
+    public function showLite($poll)
+    {
+        return new PollResourceLite(Poll::with('items')->find($poll));
     }
 
     /**
@@ -58,15 +88,22 @@ class PollController extends Controller
      */
     public function update(Request $request, Poll $poll)
     {
-        $poll->update($request->only(['name','url']));
+        $is_admin = $poll->users->find(Auth::id())->pivot->admin == 1;
+        $ratings = DB::select('select * from poll_ratings where poll_id = ? AND user_id = ?',[$poll->id, Auth::id()]);
+        $is_not_empty = count($ratings) > 0;
+        error_log("admin : " . $poll->users->find(Auth::id())->pivot->admin);
+        if($is_admin && $is_not_empty)
+        {
+            $poll->update(['chosen_item_id' => 1]);
+        }
+        else
+        {
+            return response()->json([
+                'code'      => 401,
+                'message'   => $is_admin ? "There isn't any ratings for this poll" : "You are not admin of this poll",
+            ], 401);
+        }
 
-        update($poll->users(), $request->usersToAdd);
-        update($poll->items(), $request->pollsToAdd);
-
-        update($poll->users(), $request->usersToRemove, true);
-        update($poll->items(), $request->pollsToRemove, true);
-
-        return new PollResource(Poll::with('users', 'items')->find($poll->id));
     }
 
     /**

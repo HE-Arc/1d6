@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PollController;
 use App\Http\Resources\UserResource;
 use App\User;
 use Illuminate\Http\Request;
@@ -23,10 +24,11 @@ Route::group(["middleware" => 'auth:api'], function () {
     Route::post('logout', 'Auth\LoginController@logout');
     Route::apiResource('items', 'ItemController');
     Route::apiResource('polls', 'PollController');
+    Route::post('polls/{id}/ratings', 'PollController@rate');
+    Route::get('polls/{id}/lite', 'PollController@showLite');
     Route::apiResource('groups', 'GroupController');
     Route::get('users/by-mail/{email}', function($email)
     {
-
         $user = User::where('email',$email)->first();
         if($user != null)
         {

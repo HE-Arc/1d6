@@ -15,14 +15,15 @@ class Poll extends Model
      */
     protected $fillable = [
         'name',
-        'url'
+        'url',
+        'chosen_item_id'
     ];
 
     /**
      * The users participating in the poll
      */
     public function users() {
-        return $this->belongsToMany('App\User', 'poll_users');
+        return $this->belongsToMany('App\User', 'poll_users')->withPivot('admin');
     }
 
     /**
