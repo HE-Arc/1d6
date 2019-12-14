@@ -60,7 +60,7 @@ export default {
       e.preventDefault();
       let currentObj = this;
       this.axios
-        .post(this.axios.defaults.baseURL + "/login", {
+        .post("/login", {
           email: this.email,
           password: this.password
         })
