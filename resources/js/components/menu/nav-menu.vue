@@ -21,9 +21,9 @@
 
     <div class="navbar-menu" id="navMenu">
       <div class="navbar-end">
-        <menu-link v-show="connected" link="create-poll">Create a poll</menu-link>
+        <menu-link v-show="connected" link="/create-poll">Create a poll</menu-link>
 
-        <menu-link v-show="connected" link="groups">Groups</menu-link>
+        <menu-link v-show="connected" link="/groups">Groups</menu-link>
 
         <div class="navbar-item">
           <div class="buttons">

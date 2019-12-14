@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import login from "./login";
+
 export default {
   data() {
     return {
@@ -89,11 +91,12 @@ export default {
           password_confirmation: this.password_confirm
         })
         .then(function(response) {
-          console.log(response);
-          // TODO: DO NOT USE LOCALSTORAGE, it's less safe than cookies for storing tokens
-          // TODO: Handle errors, and success, and querying animation
-          // This would not be done in a "real" application
-          localStorage.setItem("apiToken", response.data.data.api_token);
+          currentObj.login.methods.login(
+            response.data.data.id,
+            response.data.data.name,
+            response.data.data.api_token
+          );
+
           router.replace("/");
         })
         .catch(function(error) {
