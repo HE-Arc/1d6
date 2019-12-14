@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\GroupResource;
 use App\Group;
+use App\User;
+use App\Http\Resources\GroupsCollection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
@@ -17,7 +20,10 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return GroupResource::collection(Group::with('users', 'items')->paginate(25));
+
+        return GroupResource::collection(Group::whereHas('users', function($query) {
+            $query->whereIn('user_id', [Auth::id()]);
+        })->with('users', 'items')->paginate(25));
     }
 
     /**
@@ -35,7 +41,7 @@ class GroupController extends Controller
         attach($group->users(), $request->users, "admin");
         attach($group->items(), $request->items);
     
-        return new GroupResource(Group::with('users', 'items')->find($group->id));
+        return '{"data":{"id":' . $group->id . '}}';
     }
 
     /**
@@ -66,7 +72,7 @@ class GroupController extends Controller
         update($group->users(), $request->usersToRemove, true);
         update($group->items(), $request->itemsToRemove, true);
 
-        return new GroupResource($group);
+        return null;
     }
 
     /**
