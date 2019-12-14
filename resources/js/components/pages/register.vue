@@ -81,17 +81,17 @@ export default {
   methods: {
     formSubmit(e) {
       e.preventDefault();
-      let currentObj = this;
+      
       let router = this.$router;
       this.axios
-        .post(this.axios.defaults.baseURL + "/register", {
+        .post("/register", {
           email: this.email,
           name: this.username,
           password: this.password,
           password_confirmation: this.password_confirm
         })
-        .then(function(response) {
-          currentObj.login.methods.login(
+        .then((response) => {
+          login.methods.login(
             response.data.data.id,
             response.data.data.name,
             response.data.data.api_token
@@ -99,15 +99,15 @@ export default {
 
           router.replace("/");
         })
-        .catch(function(error) {
+        .catch((error) => {
           let errors = error.response.data.errors;
-          currentObj.errors = errors;
+          this.errors = errors;
           // focus on the first faulty field
           for (let type in errors) {
-            currentObj.$refs[type].focus();
+            this.$refs[type].focus();
             break;
           }
-          currentObj.output = error;
+          this.output = error;
         });
     }
   }
