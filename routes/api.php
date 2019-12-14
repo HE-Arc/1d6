@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Resources\UserResource;
+use App\User;
 use Illuminate\Http\Request;
 
 /*
@@ -22,6 +24,20 @@ Route::group(["middleware" => 'auth:api'], function () {
     Route::apiResource('items', 'ItemController');
     Route::apiResource('polls', 'PollController');
     Route::apiResource('groups', 'GroupController');
-    Route::apiResource('users', 'UserController');
-    // TODO: Authenticated routes here
+    Route::get('users/by-mail/{email}', function($email)
+    {
+
+        $user = User::where('email',$email)->first();
+        if($user != null)
+        {
+            return new UserResource($user); 
+        }
+        else
+        {
+            return response()->json([
+                'code'      => 404,
+                'message'   => "User not found",
+            ], 404);
+        }
+    });
 });
