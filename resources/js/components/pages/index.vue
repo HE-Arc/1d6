@@ -63,7 +63,7 @@ export default {
             readyUserCount: poll.user_count,
             totalUserCount: poll.total_user_count
           };
-          if (poll.id === -1) {
+          if (poll.chosen_item_id === -1) {
             // Poll is open
             this.polls.push(pollData);
           } else {
