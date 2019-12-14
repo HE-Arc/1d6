@@ -56,14 +56,16 @@ import wheel from "../wheel";
 // TODO In a very very far furture, use websockets
 const POLLING_INTERVAL = 1000;
 
+let pollPollingInterval;
+
 export default {
   data() {
     return {
       items: [
-        { name: "Loading...", weight: 0.2 },
-        { name: "Loading...", weight: 0.2 },
-        { name: "Loading...", weight: 0.2 },
-        { name: "Loading...", weight: 0.2 }
+        { name: "Loading...", weight: 1 },
+        { name: "Loading...", weight: 1 },
+        { name: "Loading...", weight: 1 },
+        { name: "Loading...", weight: 1 }
       ],
       isAdmin: false, // TODO: Query from API
       isFinished: false, // Will automatically be changed in pollServer
@@ -85,69 +87,107 @@ export default {
     },
     pollServer() {
       if (!this.isFinished) {
-        // TODO: Query API and fill result
-        const result = {
-          totalUserCount: 5,
-          userCount: 2,
-          votedItem: "",
-          items: [
-            { name: "TODO: From API", weight: Math.random() },
-            { name: "EatEco", weight: Math.random() },
-            { name: "McDonalds", weight: Math.random() },
-            { name: "Coop", weight: Math.random() },
-            { name: "King Food", weight: Math.random() },
-            { name: "Caffet'", weight: Math.random() }
-          ]
-        };
+        this.axios
+          .get("/polls/" + parseInt(this.$route.params.id) + "/lite")
+          .then(response => {
+            const poll = response.data ? response.data.data : {};
 
-        // TEMP: Randomly start the wheel
-        if (Math.random() > 0.8) {
-          result.votedItem = result.items[Math.floor(Math.random() * 6)];
-        }
+            this.userCount = poll.user_count;
 
-        this.totalUserCount = result.totalUserCount;
-        this.userCount = result.userCount;
-
-        // Prevents "unbinding" this.items
-        this.items.length = 0;
-        for (let i = 0; i < result.items.length; i++) {
-          this.items.push(result.items[i]);
-        }
-
-        if (result.votedItem !== "") {
-          this.isSpinning = true;
-          this.isFinished = true;
-
-          for (let i = 0; i < result.items.length; i++) {
-            if (result.items[i].name.includes("Mario Kart")) {
-              // This will probably not work if the user has insuficient trust level in most cases anyway
-              const a = new Audio("https://orikaru.net/dl/1d6-unknown-music.mp3");
-              a.play();
-              break;
+            // Update weights
+            for (let i = 0; i < poll.items.length; i++) {
+              for (let j = 0; j < this.items.length; j++) {
+                if (poll.items[i].id === this.items[j].id) {
+                  this.items[j].weight = poll.items[i].weight;
+                }
+              }
             }
-          }
 
-          wheel.methods.spin(result.votedItem);
-        }
+            // Find voted item
+            let votedItem = "";
+            if (poll.chosen_item_id !== -1) {
+              for (let i = 0; i < this.items.length; i++) {
+                if (this.items[i].id === poll.chosen_item_id) {
+                  votedItem = this.items[i].name;
+                  break;
+                }
+              }
+            }
+
+            if (votedItem !== "") {
+              this.isSpinning = true;
+              this.isFinished = true;
+
+              for (let i = 0; i < this.items.length; i++) {
+                if (votedItem.includes("Mario Kart")) {
+                  // This will probably not work if the user has insuficient trust level in most cases anyway
+                  const audio = new Audio(
+                    "https://orikaru.net/dl/1d6-unknown-music.mp3"
+                  );
+                  audio.play();
+                  break;
+                }
+              }
+
+              wheel.methods.spin(votedItem);
+            }
+          })
+          .catch(error => {
+            // TODO: Better error handling
+            console.log(error);
+          });
       }
     }
   },
   mounted() {
-    // TODO: Use this to get the group
-    //this.$route.params.id;
-    // Note: this may not be the correct "vue" way of doing things? but that's how the ratingsList item component works
-    this.$refs.ratingsList.items = [
-      { name: "TODO: Load from API", rating: 10 }
-    ];
+    this.axios
+      .get("/polls/" + parseInt(this.$route.params.id))
+      .then(response => {
+        const poll = response.data ? response.data.data : {};
+
+        this.isAdmin = poll.is_admin;
+        // TODO: Make the wheel spin instant here
+        this.isFinished = poll.chosen_item_id !== -1;
+        this.canRate = !poll.has_voted;
+        this.userCount = poll.user_count;
+        this.totalUserCount = poll.total_user_count;
+
+        // Note: this may not be the correct "vue" way of doing things? but that's how the ratingsList item component works
+        this.$refs.ratingsList.items = [];
+        this.items = [];
+
+        for (let i = 0; i < poll.items.length; i++) {
+          this.$refs.ratingsList.items.push({
+            name: poll.items[i].name,
+            rating: poll.items[i].weight || 1
+          });
+
+          this.items.push({
+            name: poll.items[i].name,
+            weight: poll.items[i].weight || 1
+          });
+        }
+      })
+      .catch(error => {
+        // TODO: Better error handling
+        alert("Could not load this poll, please try again in a moment.");
+        console.log(error);
+        this.$router.replace("/");
+      });
 
     this.pollServer();
-    setInterval(() => {
+
+    pollPollingInterval = setInterval(() => {
       this.pollServer();
     }, POLLING_INTERVAL);
   },
   components: {
     selectRatings,
     wheel
+  },
+  beforeRouteLeave (to, from, next) {
+    clearInterval(pollPollingInterval);
+    next();
   },
   middleware: "auth"
 };
