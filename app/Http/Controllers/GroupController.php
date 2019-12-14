@@ -64,15 +64,22 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        $group->update($request->only(['name']));
+        if($group->users()->find(Auth::id())->pivot->admin == 1)
+        {
+            $group->update($request->only(['name']));
 
-        update($group->users(), $request->usersToAdd, false, "admin");
-        update($group->items(), $request->itemsToAdd);
+            update($group->users(), $request->usersToAdd, false, "admin");
+            update($group->items(), $request->itemsToAdd);
 
-        update($group->users(), $request->usersToRemove, true);
-        update($group->items(), $request->itemsToRemove, true);
+            update($group->users(), $request->usersToRemove, true);
+            update($group->items(), $request->itemsToRemove, true);
 
-        return null;
+            return null;
+        }
+        else
+        {
+            return response()->json(null, 401);
+        }
     }
 
     /**
@@ -83,8 +90,15 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        $group->delete();
+        if($group->users()->find(Auth::id())->pivot->admin == 1)
+        {
+            $group->delete();
 
-        return response()->json(null, 204);
+            return response()->json(null, 204);
+        }
+        else
+        {
+            return response()->json(null, 401);
+        }
     }
 }
