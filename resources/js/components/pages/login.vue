@@ -2,7 +2,7 @@
   <login-layout>
     <form @submit="formSubmit">
       <div class="field">
-        <label class="label">Username</label>
+        <label class="label">Email</label>
         <div class="control">
           <input
             class="input is-success"
