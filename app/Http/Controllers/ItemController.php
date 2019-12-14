@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ItemResource;
 use App\Item;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
@@ -18,7 +19,8 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return ItemResource::collection(Item::with('users', 'groups', 'polls')->paginate(25));
+        return response()->json([],404);
+        //return ItemResource::collection(Item::with('users', 'groups', 'polls')->paginate(25));
     }
 
     /**
@@ -36,11 +38,7 @@ class ItemController extends Controller
             'image_url' => $request->image_url,
         ]);
 
-        attach($item->groups(), $request->groups);
-        attach($item->users(), $request->users, "rating");
-        attach($item->polls(), $request->polls);
-
-        return new ItemResource(Item::with('users', 'groups', 'polls')->find($item->id));
+        return response()->json(["id"=>$item->id]);
     }
 
     /**
@@ -51,7 +49,8 @@ class ItemController extends Controller
      */
     public function show(int $item)
     {
-        return new ItemResource(Item::with('users', 'groups', 'polls')->find($item));
+        return response()->json([],404);
+        //return new ItemResource(Item::with('users', 'groups', 'polls')->find($item));
     }
 
     /**
@@ -63,17 +62,15 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        $item->update($request->only(['name', 'description', 'url', 'image_url']));
-
-        update($item->users(), $request->usersToAdd, false, "rating");
-        update($item->polls(), $request->pollsToAdd);
-        update($item->groups(), $request->groupsToAdd);
-
-        update($item->users(), $request->usersToRemove, true);
-        update($item->polls(), $request->pollsToRemove, true);
-        update($item->groups(), $request->groupsToRemove, true);
-
-        return new ItemResource(Item::with('users', 'groups', 'polls')->find($item->id));
+        if($request->rating != null) 
+        {
+            $item->users->find(Auth::id())->pivot->rating = $request->rating;
+            return response()->json();
+        }
+        else
+        {
+            return response()->json([], 400);
+        }
     }
 
 
@@ -85,8 +82,8 @@ class ItemController extends Controller
      */
     public function destroy(Item $item)
     {
-        $item->delete();
+        //$item->delete();
 
-        return response()->json(null, 204);
+        return response()->json([], 404);
     }
 }
