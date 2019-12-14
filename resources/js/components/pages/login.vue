@@ -47,6 +47,14 @@ export default {
     };
   },
   methods: {
+    login(id, username, token) {
+      // TODO: DO NOT USE LOCALSTORAGE, it's less safe than cookies for storing tokens
+      // TODO: Handle errors, and success, and querying animation
+      // This would not be done in a "real" application
+      localStorage.setItem("id", id);
+      localStorage.setItem("username", username);
+      localStorage.setItem("apiToken", token);
+    },
     formSubmit(e) {
       let router = this.$router;
       e.preventDefault();
@@ -57,11 +65,12 @@ export default {
           password: this.password
         })
         .then(function(response) {
-          // TODO: DO NOT USE LOCALSTORAGE, it's less safe than cookies for storing tokens
-          // TODO: Handle errors, and success, and querying animation
-          // This would not be done in a "real" application
-          localStorage.setItem("username", response.data.data.name);
-          localStorage.setItem("apiToken", response.data.data.api_token);
+          currentObj.login(
+            response.data.data.id,
+            response.data.data.name,
+            response.data.data.api_token
+          );
+
           router.replace("/");
         })
         .catch(function(error) {
