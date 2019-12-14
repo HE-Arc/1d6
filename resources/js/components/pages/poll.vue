@@ -141,7 +141,7 @@ export default {
   },
   mounted() {
     this.axios
-      .get("/users/" + parseInt(this.$route.params.id))
+      .get("/polls/" + parseInt(this.$route.params.id))
       .then(response => {
         const poll = response.data ? response.data.data : {};
 
