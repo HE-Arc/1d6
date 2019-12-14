@@ -149,6 +149,10 @@ export default {
     selectRatings,
     wheel
   },
+  beforeRouteLeave (to, from, next) {
+    clearInterval(pollPollingInterval);
+    next();
+  },
   middleware: "auth"
 };
 </script>
