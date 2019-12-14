@@ -13,6 +13,7 @@
           :is-closed="0"
         />
       </span>
+      <span v-show="polls.length === 0">No active polls</span>
     </div>
     <h1>Past polls</h1>
     <div
@@ -27,6 +28,7 @@
           :is-closed="1"
         />
       </span>
+      <span class="no-past-polls" v-show="closedPolls.length === 0">No past polls</span>
     </div>
   </default-layout>
 </template>
