@@ -12,8 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class PollController extends Controller
 {
-    // TODO : Check authorisations
-
     /**
      * Display a listing of the resource.
      *
@@ -41,6 +39,7 @@ class PollController extends Controller
 
         $items = jsonDecodeToArray($request->items);
 
+        if (count($items) > 0) {
             $users = addLoggedUserToData(jsonDecodeToArray($request->users, true), "id", Auth::id(), function (&$arr, $index) {
                 // Make sure owner is admin
                 $arr[$index]["admin"] = true;
@@ -57,6 +56,9 @@ class PollController extends Controller
                 // TODO: Security issue here, see #113
                 $poll->items()->sync([$item->id], false);
             }
+        } else {
+            return response()->json(["errors" => ["Cannot create poll without items."]], 401);
+         }
 
         return response()->json();
     }
