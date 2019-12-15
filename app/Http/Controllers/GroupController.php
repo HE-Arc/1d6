@@ -74,11 +74,39 @@ class GroupController extends Controller
         if ($group->users()->find(Auth::id())->pivot->admin === 1) {
             $group->update($request->only(['name']));
 
-            update($group->users(), $request->users_to_add, false, "admin");
-            update($group->items(), $request->items_to_add);
+            // TODO: Using json_decode seems fishy, there must be a nicer way to do that
+            $usersToAdd = jsonDecodeToArray($request->users_to_add);
+            $usersToRemove = jsonDecodeToArray($request->users_to_remove);
+            $itemsToAdd = jsonDecodeToArray($request->items_to_add);
+            $itemsToRemove = jsonDecodeToArray($request->items_to_remove);
 
-            update($group->users(), $request->users_to_remove, true);
-            update($group->items(), $request->items_to_remove, true);
+            // We should not be able to find the connected user in any array, if we do it means something is wrong
+            foreach ($usersToAdd as $key => $value) {
+                if (intval($usersToAdd[$key]->id) === Auth::id()) {
+                    return response()->json(["errors" => ["Cannot update self user."]], 401);
+                }
+            }
+            foreach ($usersToRemove as $key => $value) {
+                if (intval($usersToRemove[$key]->id) === Auth::id()) {
+                    return response()->json(["errors" => ["Cannot remove self user."]], 401);
+                }
+            }
+
+            // TODO: Check if it is not possible to do only one query
+            foreach ($usersToAdd as $key => $user) {
+                $group->users()->attach($user->id, ['admin' => $value->admin]);
+            }
+            foreach ($itemsToAdd as $key => $item) {
+                // TODO: Create item first
+                // $group->items()->attach($item->id);
+            }
+
+            foreach ($usersToRemove as $key => $user) {
+                $group->users()->detach($user->id);
+            }
+            foreach ($itemsToRemove as $key => $item) {
+                $group->items()->detach($item->id);
+            }
 
             return null;
         } else {
