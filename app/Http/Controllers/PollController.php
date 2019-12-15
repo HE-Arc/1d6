@@ -55,7 +55,7 @@ class PollController extends Controller
 
             foreach ($items as $key => $item) {
                 // TODO: Security issue here, see #113
-                $poll->items()->sync([$item->id], false);
+                    $poll->items()->attach($item->id);
             }
             } catch (\Throwable $th) {
                 // If anything fails, delete the poll
