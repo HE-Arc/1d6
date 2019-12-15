@@ -52,8 +52,8 @@ export default {
 </script>
 
 <style scoped>
-.input-group-name {
-  margin-bottom: 20px;
-  width: auto;
+.group-item-list {
+  max-height: 200px;
+  overflow: auto;
 }
 </style>

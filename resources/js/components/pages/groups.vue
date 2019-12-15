@@ -78,25 +78,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.input-group-name {
-  margin-bottom: 20px;
-  width: auto;
-}
-
-.group-item-list {
-  max-height: 200px;
-  overflow: auto;
-}
-
-.delete-item {
-  margin-right: 12px;
-  float: right;
-}
-
-.item-list {
-  max-height: 400px;
-  overflow: auto;
-}
-</style>

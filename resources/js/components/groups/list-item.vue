@@ -15,11 +15,6 @@ export default {
 </script>
 
 <style scoped>
-.group-item-list {
-  max-height: 200px;
-  overflow: auto;
-}
-
 .delete-item {
   margin-right: 12px;
   float: right;

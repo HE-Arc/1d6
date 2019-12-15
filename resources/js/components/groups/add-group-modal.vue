@@ -141,3 +141,10 @@ let placeholderGroup = {
   userCount: 0
 };
 </script>
+
+<style scoped>
+.input-group-name {
+  margin-bottom: 20px;
+  width: auto;
+}
+</style>
