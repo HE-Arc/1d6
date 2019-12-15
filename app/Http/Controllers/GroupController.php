@@ -37,15 +37,24 @@ class GroupController extends Controller
             'name' => $request->name,
         ]);
 
-        $users = addLoggedUserToData($request->users, "id", Auth::id(), function (&$arr, $index) {
+        $items = jsonDecodeToArray($request->items);
             // Make sure owner is admin
             $arr[$index]->admin = true;
         }, function (&$arr) {
             $arr[] = ["id" => Auth::id(), "admin" => true];
         });
 
-        attach($group->users(), $users, "admin");
-        attach($group->items(), $request->items);
+        $itemsToInsert = [];
+        foreach ($items as $key => $item) {
+            $itemsToInsert[] = [
+                "name" => $item->name,
+                "description" => $item->description ?? "",
+                "url" => $item->url ?? "",
+                "image_url" => $item->image_url ?? "",
+            ];
+        }
+
+        $group->items()->createMany($itemsToInsert);
 
         return json_encode(["data" => ["id" => $group->id]]);
     }
