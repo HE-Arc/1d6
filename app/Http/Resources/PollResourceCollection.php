@@ -20,7 +20,7 @@ class PollResourceCollection extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'total_user_count' => count($this->users),
-            'user_count' => count(DB::select('select user_id from poll_ratings where poll_id = ? GROUP BY user_id', [$this->id])),
+            'user_count' => DB::table('poll_ratings')->select(DB::raw('count(*) as count'))->where('poll_id', $this->id)->groupBy('user_id')->first()->count,
             'chosen_item_id' => $this->chosen_item_id,
         ];
     }
