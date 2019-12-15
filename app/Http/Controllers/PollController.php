@@ -87,7 +87,7 @@ class PollController extends Controller
      */
     public function update(Request $request, Poll $poll)
     {
-        $is_admin = $poll->users->find(Auth::id())->pivot->admin == 1;
+        $is_admin = $poll->users->find(Auth::id())->pivot->admin === 1;
         $ratings = DB::select('select * from poll_ratings where poll_id = ? AND user_id = ?', [$poll->id, Auth::id()]);
         $is_not_empty = count($ratings) > 0;
         error_log("admin : " . $poll->users->find(Auth::id())->pivot->admin);

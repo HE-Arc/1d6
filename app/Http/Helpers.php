@@ -8,7 +8,7 @@ if (!function_exists('update')) {
         if ($data != null) {
             foreach (json_decode($data, true) as $d) {
                 if (!$delete) {
-                    if ($pivot == "") {
+                    if ($pivot === "") {
                         $target->sync($d['id'], false);
                     } else {
                         $target->sync([$d['id'], [$pivot => $d[$pivot]]], false);
@@ -26,7 +26,7 @@ if (!function_exists('attach')) {
     {
         if ($data != null) {
             foreach (json_decode($data, true) as $d) {
-                if ($pivot == "") {
+                if ($pivot === "") {
                     $target->attach($d['id']);
                 } else {
                     $target->attach($d['id'], [$pivot => $d[$pivot]]);

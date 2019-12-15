@@ -71,7 +71,7 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        if ($group->users()->find(Auth::id())->pivot->admin == 1) {
+        if ($group->users()->find(Auth::id())->pivot->admin === 1) {
             $group->update($request->only(['name']));
 
             update($group->users(), $request->usersToAdd, false, "admin");
@@ -94,7 +94,7 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        if ($group->users()->find(Auth::id())->pivot->admin == 1) {
+        if ($group->users()->find(Auth::id())->pivot->admin === 1) {
             $group->delete();
 
             return response()->json(null, 204);
