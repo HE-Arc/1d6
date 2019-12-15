@@ -38,8 +38,25 @@ class PollController extends Controller
             'name' => $request->name,
             'url' => ""
         ]);
-        attach($poll->users(), $request->users, "admin");
-        attach($poll->items(), $request->items);
+
+        $items = jsonDecodeToArray($request->items);
+
+            $users = addLoggedUserToData(jsonDecodeToArray($request->users, true), "id", Auth::id(), function (&$arr, $index) {
+                // Make sure owner is admin
+                $arr[$index]["admin"] = true;
+            }, function (&$arr) {
+                $arr[] = ["id" => Auth::id(), "admin" => true];
+            });
+
+            // TODO: Check if it is not possible to do only one query
+            foreach ($users as $key => $user) {
+                $poll->users()->sync([$user["id"] => ['admin' => $user["admin"]]], false);
+            }
+
+            foreach ($items as $key => $item) {
+                // TODO: Security issue here, see #113
+                $poll->items()->sync([$item->id], false);
+            }
 
         return response()->json();
     }
