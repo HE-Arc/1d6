@@ -95,8 +95,7 @@ class PollController extends Controller
                         // TODO: Allow user to update their vote
                         // TODO: Do not use insert directly, find a way to make *many to many to many* properly or at least make this query nicer
                         DB::insert('insert into poll_ratings (poll_id, user_id, item_id, rating) values (?, ?, ?, ?)', [$pollId, Auth::id(), $rating['id'], $rating['rating']]);
-                    }
-                    else {
+                    } else {
                         return response()->json(["errors" => ["Item does not exists in poll."]], 401);
                     }
                 }
@@ -117,7 +116,12 @@ class PollController extends Controller
      */
     public function show($poll)
     {
-        return new PollResource(Poll::with('items')->find($poll));
+        $poll = Poll::with('items')->find($poll);
+        if ($poll->users()->find(Auth::id()) !== null) {
+            return new PollResource($poll);
+        } else {
+            return response()->json(["errors" => ["No access to this poll."]], 401);
+        }
     }
 
     /**
@@ -128,7 +132,12 @@ class PollController extends Controller
      */
     public function showLite($poll)
     {
-        return new PollResourceLite(Poll::with('items')->find($poll));
+        $poll = Poll::with('items')->find($poll);
+        if ($poll->users()->find(Auth::id()) !== null) {
+            return new PollResourceLite($poll);
+        } else {
+            return response()->json(["errors" => ["No access to this poll."]], 401);
+        }
     }
 
     /**
