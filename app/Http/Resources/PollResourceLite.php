@@ -17,7 +17,7 @@ class PollResourceLite extends JsonResource
     public function toArray($request)
     {
         return [
-            'user_count' => count(DB::select('select user_id from poll_ratings where poll_id = ? GROUP BY user_id',[$this->id])),
+            'user_count' => count(DB::select('select user_id from poll_ratings where poll_id = ? GROUP BY user_id', [$this->id])),
             'chosen_item_id' => $this->chosen_item_id,
             'items' => ItemResource::collection($this->whenLoaded('items')),
         ];

@@ -19,7 +19,7 @@ class ItemResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'url' => $this->url,
-            'image_url' =>$this->image_url,
+            'image_url' => $this->image_url,
             'users' => UserResource::collection($this->whenLoaded('users')),
             'polls' => ItemResource::collection($this->whenLoaded('polls')),
             'groups' => GroupResource::collection($this->whenLoaded('groups')),

@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
-        // TODO : Check authorisations
+    // TODO : Check authorisations
 
     /**
      * Display a listing of the resource.
@@ -21,7 +21,7 @@ class GroupController extends Controller
     public function index()
     {
 
-        return GroupResource::collection(Group::whereHas('users', function($query) {
+        return GroupResource::collection(Group::whereHas('users', function ($query) {
             $query->whereIn('user_id', [Auth::id()]);
         })->with('users', 'items')->paginate(25));
     }
@@ -33,14 +33,14 @@ class GroupController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { 
+    {
         $group = Group::create([
-            'name' => $request->name, 
-          ]);
+            'name' => $request->name,
+        ]);
 
         attach($group->users(), $request->users, "admin");
         attach($group->items(), $request->items);
-    
+
         return '{"data":{"id":' . $group->id . '}}';
     }
 
@@ -64,8 +64,7 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        if($group->users()->find(Auth::id())->pivot->admin == 1)
-        {
+        if ($group->users()->find(Auth::id())->pivot->admin == 1) {
             $group->update($request->only(['name']));
 
             update($group->users(), $request->usersToAdd, false, "admin");
@@ -75,9 +74,7 @@ class GroupController extends Controller
             update($group->items(), $request->itemsToRemove, true);
 
             return null;
-        }
-        else
-        {
+        } else {
             return response()->json(null, 401);
         }
     }
@@ -90,14 +87,11 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        if($group->users()->find(Auth::id())->pivot->admin == 1)
-        {
+        if ($group->users()->find(Auth::id())->pivot->admin == 1) {
             $group->delete();
 
             return response()->json(null, 204);
-        }
-        else
-        {
+        } else {
             return response()->json(null, 401);
         }
     }

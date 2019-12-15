@@ -22,21 +22,24 @@ class Poll extends Model
     /**
      * The users participating in the poll
      */
-    public function users() {
+    public function users()
+    {
         return $this->belongsToMany('App\User', 'poll_users')->withPivot('admin');
     }
 
     /**
      * The items for which the poll provides choice
      */
-    public function items() {
+    public function items()
+    {
         return $this->belongsToMany('App\Item', 'poll_items');
     }
 
     /**
      * The items which have receiveed
      */
-    public function itemsWithVotes($itemId) {
+    public function itemsWithVotes($itemId)
+    {
         return $this->belongsToMany('App\Item', 'poll_ratings')->wherePivot('item_id', $itemId)->withPivot('rating');
     }
 

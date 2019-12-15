@@ -19,7 +19,7 @@ class ItemController extends Controller
      */
     public function index()
     {
-        return response()->json([],404);
+        return response()->json([], 404);
         //return ItemResource::collection(Item::with('users', 'groups', 'polls')->paginate(25));
     }
 
@@ -38,7 +38,7 @@ class ItemController extends Controller
             'image_url' => $request->image_url,
         ]);
 
-        return response()->json(["id"=>$item->id]);
+        return response()->json(["id" => $item->id]);
     }
 
     /**
@@ -49,7 +49,7 @@ class ItemController extends Controller
      */
     public function show(int $item)
     {
-        return response()->json([],404);
+        return response()->json([], 404);
         //return new ItemResource(Item::with('users', 'groups', 'polls')->find($item));
     }
 
@@ -62,13 +62,10 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        if($request->rating != null) 
-        {
+        if ($request->rating != null) {
             $item->users->find(Auth::id())->pivot->rating = $request->rating;
             return response()->json();
-        }
-        else
-        {
+        } else {
             return response()->json([], 400);
         }
     }
