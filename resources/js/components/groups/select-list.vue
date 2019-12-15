@@ -1,5 +1,5 @@
 <template>
-  <form v-on:submit.prevent="addToList">
+  <form v-on:submit.prevent="addFunction">
     <span>
       <label class="label">
         <slot />
@@ -9,6 +9,7 @@
           cannot-delete="cannot-delete"
           v-for="item in unremovableItems"
           v-bind:key="item.index"
+          :remove-function="removeFunction(item)"
         >{{ item }}</list-item>
         <list-item v-for="item in items" v-bind:key="item.index">{{ item.name }}</list-item>
       </div>
@@ -33,7 +34,7 @@ export default {
   components: {
     listItem
   },
-  props: ["icon", "placeholder", "content-type"],
+  props: ["icon", "placeholder", "add-function", "remove-function"],
   data() {
     return {
       currentValue: "",
@@ -43,39 +44,9 @@ export default {
   },
   methods: {
     addToList() {
-      if (
-        !this.items.includes(this.currentValue) &&
-        itemExists[this.$props.contentType](this.currentValue)
-      ) {
-        if (this.contentType === "users") {
-
-        } else if (this.contentType === "items") {
-
-        }
-        this.items.push(this.currentValue);
-        // TODO: add item to DB using the API
-      }
+      this.addFunction(this.currentValue);
       this.currentValue = "";
     }
-  }
-};
-
-let itemExists = {
-  users: function(username) {
-    let user = null;
-    this.axios
-      .get(this.axios.defaults.baseURL + "/users", {
-        name: username
-      })
-      .then(function(response) {
-        return true;
-      })
-      .catch(function(error) {
-        return false;
-      });
-  },
-  items: function(itemname) {
-    return true;
   }
 };
 </script>
