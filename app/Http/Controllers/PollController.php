@@ -60,7 +60,7 @@ class PollController extends Controller
             return response()->json(["errors" => ["Cannot create poll without items."]], 401);
          }
 
-        return response()->json();
+        return response()->json(json_encode(["id" => $poll->id]));
     }
 
     /**
