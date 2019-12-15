@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\ItemResource;
 use App\Group;
-use App\User;
-use App\Http\Resources\GroupsCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -94,12 +93,20 @@ class GroupController extends Controller
 
             // TODO: Check if it is not possible to do only one query
             foreach ($usersToAdd as $key => $user) {
-                $group->users()->attach($user->id, ['admin' => $value->admin]);
+                $group->users()->sync([$user->id => ['admin' => $value->admin]], false);
             }
+
+            $itemsToInsert = [];
             foreach ($itemsToAdd as $key => $item) {
-                // TODO: Create item first
-                // $group->items()->attach($item->id);
+                $itemsToInsert[] = [
+                    "name" => $item->name,
+                    "description" => $item->description ?? "",
+                    "url" => $item->url ?? "",
+                    "image_url" => $item->image_url ?? "",
+                ];
             }
+
+            $group->items()->createMany($itemsToInsert);
 
             foreach ($usersToRemove as $key => $user) {
                 $group->users()->detach($user->id);
