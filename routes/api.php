@@ -30,7 +30,7 @@ Route::group(["middleware" => 'auth:api'], function () {
     Route::get('users/by-mail/{email}', function($email)
     {
         $user = User::where('email',$email)->first();
-        if($user != null)
+        if($user !== null)
         {
             return new UserResource($user); 
         }

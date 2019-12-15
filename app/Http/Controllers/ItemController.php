@@ -62,7 +62,7 @@ class ItemController extends Controller
      */
     public function update(Request $request, Item $item)
     {
-        if ($request->rating != null) {
+        if ($request->rating !== null) {
             $item->users->find(Auth::id())->pivot->rating = $request->rating;
             return response()->json();
         } else {
