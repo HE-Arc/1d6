@@ -1,10 +1,18 @@
 <template>
   <span class="list-item">
     <span class="text">
-      <slot/>
+      <slot />
     </span>
     <span class="stars">
-      <star-rating v-model="stars" :increment="0.5" :show-rating="false" :star-size="20"></star-rating>
+      <star-rating
+        v-model="rating"
+        :increment="0.5"
+        :show-rating="false"
+        :star-size="20"
+        :read-only="readOnly"
+        :rounded-corners="true"
+        v-on:rating-selected="saveFunction"
+      ></star-rating>
     </span>
   </span>
 </template>
@@ -16,10 +24,11 @@ export default {
   components: {
     StarRating
   },
+  props: ["initialRating", "saveFunction", "readOnly"],
   data() {
     return {
-      stars: 10,
-    }
+      rating: this.initialRating
+    };
   }
 };
 </script>

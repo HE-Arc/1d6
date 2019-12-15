@@ -1,10 +1,10 @@
 <template>
-<span class="list-item">
-    <slot/>
+  <span class="list-item">
+    <slot />
     <a href="#" v-if="!cannotDelete" class="delete-item" v-on:click="deleteEntry()">
-    <i class="fa fa-trash"></i>
+      <i class="fa fa-trash"></i>
     </a>
-</span>
+  </span>
 </template>
 
 <script>
@@ -16,13 +16,12 @@ export default {
       let items = this.$parent.items;
       let index = items.indexOf(this.$slots.default[0].text);
       items.splice(index, 1);
-    },
+    }
   }
 };
 </script>
 
 <style scoped>
-
 .group-item-list {
   max-height: 200px;
   overflow: auto;
