@@ -4,14 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ItemResource;
 use App\Item;
+use \Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
-
-    // TODO : Check authorisations
-
     /**
      * Store a newly created resource in storage.
      *
@@ -37,13 +35,19 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Item $item)
+    public function updateRatings(Request $request)
     {
-        if ($request->rating !== null) {
-            $item->users->find(Auth::id())->pivot->rating = $request->rating;
-            return response()->json();
+        $items = jsonDecodeToArray($request->ratings, true);
+        $validator = Validator::make($items, ['*.rating' => 'integer|required|max:10|min:0']);
+
+        if ($validator->passes()) {
+            // TODO: Check how to do only 1 request
+            foreach ($items as $key => $item) {
+                Item::find($item["id"])->users()->sync([Auth::id() => ['rating' => $item["rating"]]], false);
+            }
+            return null;
         } else {
-            return response()->json([], 400);
+            return response()->json(["errors" => ["Invalid rating range."]], 401);
         }
     }
 }

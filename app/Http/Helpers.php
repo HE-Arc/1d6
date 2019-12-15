@@ -31,9 +31,9 @@ if (!function_exists('jsonDecodeToArray')) {
     /**
      * Decode json, if it fails or is empty, returns an empty array
      */
-    function jsonDecodeToArray($data)
+    function jsonDecodeToArray($data, $assoc = false)
     {
-        $data = json_decode($data);
+        $data = json_decode($data, $assoc);
 
         if (!is_array($data)) {
             return [];
