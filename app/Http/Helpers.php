@@ -35,3 +35,34 @@ if (!function_exists('attach')) {
         }
     }
 }
+
+if (!function_exists('addLoggedUserToData')) {
+    /**
+     * Check if $userId is found in the $data array (passed as a string), calls appropriate function and return the data as a string
+     */
+    function addLoggedUserToData($data, $key, $userId, $onFound, $onNotFound)
+    {
+        $users = json_decode($data);
+
+        if (!is_array($users)) {
+            $users = [];
+        }
+
+        $hasLoggedUser = false;
+
+        foreach ($users as $k => $value) {
+            if ($value->$key === $userId) {
+                $hasLoggedUser = true;
+                $onFound($users, $k);
+                break;
+            }
+        }
+
+        if (!$hasLoggedUser) {
+            $onNotFound($users);
+        }
+
+        // That's not very smart, but that's how the rest of the code works
+        return json_encode($users);
+    }
+}

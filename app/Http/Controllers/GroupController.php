@@ -38,7 +38,14 @@ class GroupController extends Controller
             'name' => $request->name,
         ]);
 
-        attach($group->users(), $request->users, "admin");
+        $users = addLoggedUserToData($request->users, "id", Auth::id(), function (&$arr, $index) {
+            // Make sure owner is admin
+            $arr[$index]->admin = true;
+        }, function (&$arr) {
+            $arr[] = ["id" => Auth::id(), "admin" => true];
+        });
+
+        attach($group->users(), $users, "admin");
         attach($group->items(), $request->items);
 
         return json_encode(["data" => ["id" => $group->id]]);
