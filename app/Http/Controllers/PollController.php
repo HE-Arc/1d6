@@ -156,10 +156,7 @@ class PollController extends Controller
         if ($is_admin && $is_not_empty) {
             $poll->update(['chosen_item_id' => 1]);
         } else {
-            return response()->json([
-                'code'      => 401,
-                'message'   => $is_admin ? "There isn't any ratings for this poll" : "You are not admin of this poll",
-            ], 401);
+            return response()->json(["errors" => ["Cannot update this poll."]], 401);
         }
     }
 
