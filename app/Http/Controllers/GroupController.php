@@ -23,7 +23,7 @@ class GroupController extends Controller
 
         return GroupResource::collection(Group::whereHas('users', function ($query) {
             $query->whereIn('user_id', [Auth::id()]);
-        })->with('users', 'items')->paginate(25));
+        })->paginate(25));
     }
 
     /**
