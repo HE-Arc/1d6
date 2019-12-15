@@ -40,6 +40,7 @@ class PollController extends Controller
         $items = jsonDecodeToArray($request->items);
 
         if (count($items) > 0) {
+            try {
             $users = addLoggedUserToData(jsonDecodeToArray($request->users, true), "id", Auth::id(), function (&$arr, $index) {
                 // Make sure owner is admin
                 $arr[$index]["admin"] = true;
@@ -56,7 +57,12 @@ class PollController extends Controller
                 // TODO: Security issue here, see #113
                 $poll->items()->sync([$item->id], false);
             }
+            } catch (\Throwable $th) {
+                // If anything fails, delete the poll
+                $poll->delete();
+            }
         } else {
+            $poll->delete();
             return response()->json(["errors" => ["Cannot create poll without items."]], 401);
          }
 
