@@ -9,6 +9,7 @@
         :increment="0.5"
         :show-rating="false"
         :star-size="20"
+        :read-only="readOnly"
         :rounded-corners="true"
         v-on:rating-selected="saveFunction"
       ></star-rating>
@@ -23,7 +24,7 @@ export default {
   components: {
     StarRating
   },
-  props: ["initialRating", "saveFunction"],
+  props: ["initialRating", "saveFunction", "readOnly"],
   data() {
     return {
       rating: this.initialRating
