@@ -78,9 +78,16 @@ class PollController extends Controller
      */
     public function rate(Request $request, int $pollId)
     {
-        foreach (json_decode($request->ratings, true) as $rating) {
+                    // Can only vote on a rating if it's in a poll
+                    if ($poll->items()->find($rating['id']) !== null) {
+                        // TODO: Fix doing so many queries here
+                        // TODO: Allow user to update their vote
+                        // TODO: Do not use insert directly, find a way to make *many to many to many* properly or at least make this query nicer
             DB::insert('insert into poll_ratings (poll_id, user_id, item_id, rating) values (?, ?, ?, ?)', [$pollId, Auth::id(), $rating['id'], $rating['rating']]);
         }
+                    else {
+                        return response()->json(["errors" => ["Item does not exists in poll."]], 401);
+                    }
     }
 
     /**
