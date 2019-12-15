@@ -21,7 +21,9 @@ class PollController extends Controller
      */
     public function index()
     {
-        return new PollCollection(Poll::with('items')->paginate(25));
+        return PollResource::collection(Poll::whereHas('users', function ($query) {
+            $query->whereIn('user_id', [Auth::id()]);
+        })->paginate(25));
     }
 
     /**
