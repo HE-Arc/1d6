@@ -74,11 +74,11 @@ class GroupController extends Controller
         if ($group->users()->find(Auth::id())->pivot->admin === 1) {
             $group->update($request->only(['name']));
 
-            update($group->users(), $request->usersToAdd, false, "admin");
-            update($group->items(), $request->itemsToAdd);
+            update($group->users(), $request->users_to_add, false, "admin");
+            update($group->items(), $request->items_to_add);
 
-            update($group->users(), $request->usersToRemove, true);
-            update($group->items(), $request->itemsToRemove, true);
+            update($group->users(), $request->users_to_remove, true);
+            update($group->items(), $request->items_to_remove, true);
 
             return null;
         } else {
