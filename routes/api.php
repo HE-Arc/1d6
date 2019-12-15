@@ -22,7 +22,8 @@ Route::post('login', 'Auth\LoginController@login')->name("login");
 
 Route::group(["middleware" => 'auth:api'], function () {
     Route::post('logout', 'Auth\LoginController@logout');
-    Route::apiResource('items', 'ItemController');
+    Route::post('items', 'ItemController@store');
+    Route::patch('items', 'ItemController@update');
     Route::apiResource('polls', 'PollController');
     Route::post('polls/{id}/ratings', 'PollController@rate');
     Route::get('polls/{id}/lite', 'PollController@showLite');

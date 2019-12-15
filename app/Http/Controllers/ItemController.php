@@ -13,17 +13,6 @@ class ItemController extends Controller
     // TODO : Check authorisations
 
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return response()->json([], 404);
-        //return ItemResource::collection(Item::with('users', 'groups', 'polls')->paginate(25));
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -42,18 +31,6 @@ class ItemController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(int $item)
-    {
-        return response()->json([], 404);
-        //return new ItemResource(Item::with('users', 'groups', 'polls')->find($item));
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -68,19 +45,5 @@ class ItemController extends Controller
         } else {
             return response()->json([], 400);
         }
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Item $item)
-    {
-        //$item->delete();
-
-        return response()->json([], 404);
     }
 }
