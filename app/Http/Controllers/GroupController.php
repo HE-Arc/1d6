@@ -38,11 +38,19 @@ class GroupController extends Controller
         ]);
 
         $items = jsonDecodeToArray($request->items);
+
+        $users = addLoggedUserToData(jsonDecodeToArray($request->users), "id", Auth::id(), function (&$arr, $index) {
             // Make sure owner is admin
             $arr[$index]->admin = true;
         }, function (&$arr) {
-            $arr[] = ["id" => Auth::id(), "admin" => true];
+            // Dirty trick to create an object as "object" is reserved by laravel (wtf?)
+            $arr[] = json_decode(json_encode(["id" => Auth::id(), "admin" => true]));
         });
+
+        // TODO: Check if it is not possible to do only one query
+        foreach ($users as $key => $user) {
+            $group->users()->sync([$user->id => ['admin' => $user->admin]], false);
+        }
 
         $itemsToInsert = [];
         foreach ($items as $key => $item) {
