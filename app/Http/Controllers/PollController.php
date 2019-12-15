@@ -78,6 +78,9 @@ class PollController extends Controller
      */
     public function rate(Request $request, int $pollId)
     {
+            if ($poll->users()->find(Auth::id())->exists()) {
+                // TODO: Check how to do only 1 request
+                foreach ($ratings as $rating) {
                     // Can only vote on a rating if it's in a poll
                     if ($poll->items()->find($rating['id']) !== null) {
                         // TODO: Fix doing so many queries here
@@ -89,6 +92,9 @@ class PollController extends Controller
                         return response()->json(["errors" => ["Item does not exists in poll."]], 401);
                     }
     }
+            } else {
+                return response()->json(["errors" => ["Cannot vote in this poll."]], 401);
+            }
 
     /**
      * Display the specified resource.
