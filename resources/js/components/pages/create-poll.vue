@@ -146,6 +146,25 @@ export default {
         this.poll.items.findIndex(item => item.id === itemToRemove.id),
         1
       );
+    },
+    createPoll: function() {
+      let data = {
+        name: this.poll.name,
+        users: this.poll.users.map(user => {
+          return { id: user.id, admin: user.admin };
+        }),
+        items: this.poll.items.map(item => {
+          return { id: item.id };
+        })
+      };
+      this.axios
+        .post("/polls", data)
+        .then(response => {
+          router.replace("/poll/" + response.data.data.id);
+        })
+        .catch(error => {
+          alert("ERROR: Could not create poll");
+        });
     }
   },
   mounted: function() {
