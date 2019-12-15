@@ -41,7 +41,7 @@ class GroupController extends Controller
         attach($group->users(), $request->users, "admin");
         attach($group->items(), $request->items);
 
-        return '{"data":{"id":' . $group->id . '}}';
+        return json_encode(["data" => ["id" => $group->id]]);
     }
 
     /**
