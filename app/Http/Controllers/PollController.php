@@ -79,7 +79,7 @@ class PollController extends Controller
      */
     public function rate(Request $request, int $pollId)
     {
-        $ratings = jsonDecodeToArray($request->ratings, true);
+        $ratings = $request->ratings;
         $validator = Validator::make($ratings, ['*.rating' => 'integer|required|max:10|min:0']);
 
         if ($validator->passes()) {
