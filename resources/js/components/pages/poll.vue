@@ -31,7 +31,7 @@
           <div class="buttons has-addons is-centered">
             <p v-show="isSpinning">Spinning the wheel!</p>
             <p v-show="isFinished && !isSpinning">This poll is closed</p>
-            <button
+            <button :disabled="userCount === 0"
               v-show="isAdmin && !isSpinning"
               type="submit"
               v-on:click="spinWheel"
@@ -85,7 +85,9 @@ export default {
         };
       });
       this.axios
-        .post("/polls/" + parseInt(this.$route.params.id) + "/ratings", data)
+        .post("/polls/" + parseInt(this.$route.params.id) + "/ratings", {
+          ratings: data
+        })
         .then(response => {})
         .catch(error => {
           alert("ERROR: Could not send ratings");
@@ -107,7 +109,6 @@ export default {
           .get("/polls/" + parseInt(this.$route.params.id) + "/lite")
           .then(response => {
             const poll = response.data ? response.data.data : {};
-
             this.userCount = poll.user_count;
 
             // Update weights
