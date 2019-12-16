@@ -124,7 +124,7 @@ export default {
 
             // Find voted item
             let votedItem = "";
-            if (poll.chosen_item_id !== -1) {
+            if (poll.chosen_item_id !== null) {
               for (let i = 0; i < this.items.length; i++) {
                 if (this.items[i].id === poll.chosen_item_id) {
                   votedItem = this.items[i].name;
