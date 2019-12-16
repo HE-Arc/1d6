@@ -1,0 +1,60 @@
+//
+.floating-button {
+    position: fixed;
+    right: 10%;
+    bottom: 5%;
+    font-weight: bold;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+}
+
+.floating-button:focus {
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)!important;
+}
+
+.container-border {
+    border-left: 4px solid #ccc;
+}
+
+
+// Ended up second in the best css name contest
+.container {
+    border-left: 4px solid #ccc;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.container-active {
+    border-left: 4px solid #6ea0f0;  
+}
+
+// Nominated for best css names
+.container-container {
+    padding: 0px;
+    margin: 0px;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+
+}
+
+.poll-card {
+    min-width: 250px;
+    margin-bottom: 10px;
+}
+
+.poll-card-action {
+    display: inline-block;
+    margin-top: 5px;
+    margin-right: 20px;
+}
+
+.header, h1 {
+    display: block;
+    font-size: 1.3em;
+}
+
+.navbar-menu.is-active {
+    position: fixed;
+    width: 100%;
+}
