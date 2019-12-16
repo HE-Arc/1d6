@@ -83,12 +83,10 @@ export default {
             isAdmin: group.is_admin
           });
         });
-        console.log(this.groups);
       })
       .catch(error => {
         // TODO: better error handling
         alert("ERROR: Could not load groups");
-        console.log()
       });
   }
 };
