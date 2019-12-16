@@ -12,8 +12,8 @@
         >{{ item.name }}</list-item>
         <list-item
           v-for="item in items"
-          v-bind:key="item.index"
-          :remove-function="removeFunction(item)"
+          v-bind:key="item.id"
+          :remove-function="removeFromList(item)"
         >{{ item.name }}</list-item>
       </div>
       <div class="field has-addons">
@@ -37,19 +37,22 @@ export default {
   components: {
     listItem
   },
-  props: ["icon", "placeholder", "add-function", "remove-function"],
+  props: ["icon", "placeholder", "items", "add-function", "remove-function"],
   data() {
     return {
       currentValue: "",
-      unremovableItems: [],
-      items: []
+      unremovableItems: []
     };
   },
   methods: {
     addToList() {
-      console.log(this.currentValue.value);
       this.addFunction(this.currentValue);
       this.currentValue = "";
+    },
+    removeFromList(item) {
+      return () => {
+        this.removeFunction(item)
+      }
     }
   }
 };
