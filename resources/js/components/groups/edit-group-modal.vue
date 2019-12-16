@@ -77,8 +77,6 @@ export default {
         })
         .catch(error => {
           alert("ERROR: Could not load group");
-          console.log(error);
-          console.log(error.response);
         });
     },
     save: function() {
@@ -108,7 +106,6 @@ export default {
         })
         .catch(error => {
           alert("ERROR: Could not save group");
-          console.log(error);
         });
     },
     close: function() {

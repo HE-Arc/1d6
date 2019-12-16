@@ -140,7 +140,6 @@ export default {
         })
         .catch(error => {
           alert("ERROR: Could not get user");
-          console.log(error.response);
         });
     },
     removeUser: function(userToRemove) {
