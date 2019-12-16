@@ -66,6 +66,8 @@
 </template>
 
 <script>
+import login from "./login";
+
 export default {
   data() {
     return {
@@ -79,7 +81,7 @@ export default {
   methods: {
     formSubmit(e) {
       e.preventDefault();
-      let currentObj = this;
+      
       let router = this.$router;
       this.axios
         .post("/register", {
@@ -88,23 +90,24 @@ export default {
           password: this.password,
           password_confirmation: this.password_confirm
         })
-        .then(function(response) {
-          console.log(response);
-          // TODO: DO NOT USE LOCALSTORAGE, it's less safe than cookies for storing tokens
-          // TODO: Handle errors, and success, and querying animation
-          // This would not be done in a "real" application
-          localStorage.setItem("apiToken", response.data.data.api_token);
+        .then((response) => {
+          login.methods.login(
+            response.data.data.id,
+            response.data.data.name,
+            response.data.data.api_token
+          );
+
           router.replace("/");
         })
-        .catch(function(error) {
+        .catch((error) => {
           let errors = error.response.data.errors;
-          currentObj.errors = errors;
+          this.errors = errors;
           // focus on the first faulty field
           for (let type in errors) {
-            currentObj.$refs[type].focus();
+            this.$refs[type].focus();
             break;
           }
-          currentObj.output = error;
+          this.output = error;
         });
     }
   }

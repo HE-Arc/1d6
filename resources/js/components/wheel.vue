@@ -35,6 +35,8 @@ function getCircle() {
 function spin(itemName) {
   let target = 0;
 
+  totalWeight = computeTotalWeight();
+
   for (let i = 0; i < items.length; i++) {
     const item = items[i];
     if (item.name === itemName) {
@@ -56,7 +58,12 @@ function handleWheelRotation() {
   currentAngle +=
     DECELERATION_COEFF * t * (3 - 2 * t) * (targetAngle - currentAngle); //(t * t * (3 - 2 * t)) * targetAngle;
 
-  return targetAngle !== currentAngle;
+  if(targetAngle - currentAngle < 0.001) {
+    currentAngle = targetAngle;
+    return false;
+  }
+
+  return true;
 }
 
 // Draw a part of a pie
@@ -211,9 +218,11 @@ export default {
   },
   props: ["items"],
   watch: {
-    items: () => {
+    items: (newItems) => {
+      items = newItems;
       render();
-    }
+    },
+    deep: true
   }
 };
 </script>
