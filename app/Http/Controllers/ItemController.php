@@ -36,8 +36,9 @@ class ItemController extends Controller
      */
     public function updateRatings(Request $request)
     {
-        $items = jsonDecodeToArray($request->ratings, true);
-        $validator = Validator::make($items, ['*.rating' => 'integer|required|max:10|min:0']);
+        $items = $request->ratings;
+        
+        $validator = Validator::make($items, ['*.rating' => 'integer|required|max:10|min:1']);
 
         if ($validator->passes()) {
             // TODO: Check how to do only 1 request

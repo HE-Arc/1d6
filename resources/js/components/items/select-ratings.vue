@@ -10,7 +10,7 @@
         :read-only="readOnly"
         :initialRating="item.rating / 2"
         :save-function="saveFunction(item)"
-      >{{ item.name }} {{item.rating / 2}}</list-item>
+      >{{ item.name }}</list-item>
     </div>
   </span>
 </template>

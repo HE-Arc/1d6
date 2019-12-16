@@ -68,6 +68,7 @@ export default {
           this.displayedUsers = this.group.users.filter(
             user => user.id !== ownId
           );
+          this.displayedItems = this.group.items;
 
           this.$refs.userList.unremovableItems = this.group.users.filter(
             user => user.id === ownId
@@ -99,6 +100,7 @@ export default {
             group => group.id === this.group.id
           );
           // This will change the page below.
+          parentsGroup.name = this.group.name;
           parentsGroup.userCount =
             this.group.users.length +
             this.usersToAdd.length -

@@ -27,11 +27,17 @@ export default {
     };
   },
   methods: {
-    open: function() {
+    open: function(id) {
       this.axios
         .get("/groups/" + id)
         .then(response => {
-          this.$refs.ratingsList.items = response.data.data.items;
+          this.$refs.ratingsList.items = response.data.data.items.map(item => {
+            return {
+              id: item.id,
+              name: item.name,
+              rating: item.default_rating
+            };
+          })
           this.$refs.modal.active = true;
         })
         .catch(error => {
@@ -44,7 +50,7 @@ export default {
         return { id: item.id, rating: item.rating };
       });
       this.axios
-        .patch("/items/ratings", ratings)
+        .patch("/items/ratings", {ratings: ratings})
         .then(response => {})
         .catch(error => {
           alert("ERROR: Could not save default ratings");
