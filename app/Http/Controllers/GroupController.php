@@ -91,45 +91,45 @@ class GroupController extends Controller
             $group->update($request->only(['name']));
 
             // TODO: Using json_decode seems fishy, there must be a nicer way to do that
-            $usersToAdd = jsonDecodeToArray($request->users_to_add);
-            $usersToRemove = jsonDecodeToArray($request->users_to_remove);
-            $itemsToAdd = jsonDecodeToArray($request->items_to_add);
-            $itemsToRemove = jsonDecodeToArray($request->items_to_remove);
+            $usersToAdd = $request->users_to_add;
+            $usersToRemove = $request->users_to_remove;
+            $itemsToAdd = $request->items_to_add;
+            $itemsToRemove = $request->items_to_remove;
 
             // We should not be able to find the connected user in any array, if we do it means something is wrong
             foreach ($usersToAdd as $key => $value) {
-                if (intval($usersToAdd[$key]->id) === Auth::id()) {
+                if (intval($usersToAdd[$key]["id"]) === Auth::id()) {
                     return response()->json(["errors" => ["Cannot update self user."]], 401);
                 }
             }
             foreach ($usersToRemove as $key => $value) {
-                if (intval($usersToRemove[$key]->id) === Auth::id()) {
+                if (intval($usersToRemove[$key]["id"]) === Auth::id()) {
                     return response()->json(["errors" => ["Cannot remove self user."]], 401);
                 }
             }
 
             // TODO: Check if it is not possible to do only one query
             foreach ($usersToAdd as $key => $user) {
-                $group->users()->sync([$user->id => ['admin' => $value->admin]], false);
+                $group->users()->sync([$user["id"] => ['admin' => $value->admin]], false);
             }
 
             $itemsToInsert = [];
             foreach ($itemsToAdd as $key => $item) {
                 $itemsToInsert[] = [
-                    "name" => $item->name,
-                    "description" => $item->description ?? "",
-                    "url" => $item->url ?? "",
-                    "image_url" => $item->image_url ?? "",
+                    "name" => $item["name"],
+                    "description" => $item["description"],
+                    "url" => $item["url"],
+                    "image_url" => $item["image_url"],
                 ];
             }
 
             $group->items()->createMany($itemsToInsert);
 
             foreach ($usersToRemove as $key => $user) {
-                $group->users()->detach($user->id);
+                $group->users()->detach($user["id"]);
             }
             foreach ($itemsToRemove as $key => $item) {
-                $group->items()->detach($item->id);
+                $group->items()->detach($item["id"]);
             }
 
             return null;
