@@ -14,7 +14,7 @@
         v-bind:group="group"
         :edit-function="editGroup(group.id)"
         :delete-function="deleteGroup(group.id)"
-        :edit-ratings-function="editRatings"
+        :edit-ratings-function="editRatings(group.id)"
       ></group-card>
     </div>
     <button class="button is-primary is-rounded floating-button" v-on:click="createGroup">New group</button>
@@ -45,28 +45,28 @@ export default {
     },
     editGroup: function(id) {
       return () => {
-      this.$refs.editGroupModal.open(id);
+        this.$refs.editGroupModal.open(id);
       };
     },
     editRatings: function(id) {
       return () => {
-      this.$refs.editDefaultRatingsModal.open(id);
+        this.$refs.editDefaultRatingsModal.open(id);
       };
     },
     deleteGroup: function(id) {
       return () => {
-      this.axios
-        .delete("/groups/" + id)
-        .then(response => {
-          this.groups.splice(
-            this.groups.findIndex(group => group.id === id),
-            1
-          );
-        })
-        .catch(error => {
-          // TODO: better error handling
-          alert("ERROR: Could not delete group");
-        });
+        this.axios
+          .delete("/groups/" + id)
+          .then(response => {
+            this.groups.splice(
+              this.groups.findIndex(group => group.id === id),
+              1
+            );
+          })
+          .catch(error => {
+            // TODO: better error handling
+            alert("ERROR: Could not delete group");
+          });
       };
     }
   },
@@ -82,11 +82,13 @@ export default {
             userCount: group.user_count,
             isAdmin: group.is_admin
           });
-        })
+        });
+        console.log(this.groups);
       })
       .catch(error => {
         // TODO: better error handling
         alert("ERROR: Could not load groups");
+        console.log()
       });
   }
 };
