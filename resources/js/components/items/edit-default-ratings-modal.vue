@@ -50,7 +50,7 @@ export default {
         return { id: item.id, rating: item.rating };
       });
       this.axios
-        .patch("/items/ratings", ratings)
+        .patch("/items/ratings", {ratings: ratings})
         .then(response => {})
         .catch(error => {
           alert("ERROR: Could not save default ratings");
