@@ -158,19 +158,25 @@ class PollController extends Controller
     {
         $isPollAdmin = $poll->users->find(Auth::id())->pivot->admin === 1;
         $ratings = DB::select('select * from poll_ratings where poll_id = ?', [$poll->id]);
-        $hasRatings = count($ratings) > 0;
+        $hasRatings = count($ratings) > 0; 
         if ($isPollAdmin && $hasRatings && $poll->chosen_item_id === null) {
             $sumRatings = 0;
-            foreach($ratings as $rating) $sumRatings += $rating->rating;
+            foreach($ratings as $rating) 
+            {
+                $sumRatings += $rating->rating;
+            }
             $target = random_int(0,$sumRatings);
-            $i = 0;
-
-            foreach($ratings as $rating)
+            
+            $selectedItem = 0;
+            for($i = 0; $i < count($ratings); $i++)
             {
                 $target -= $ratings[$i]->rating;
-                if($target > 0) $i++;
+                if($target > 0) 
+                {
+                    $selectedItem = $i;
+                }
             }
-            $poll->update(['chosen_item_id' => $ratings[$i]->item_id]);
+            $poll->update(['chosen_item_id' => $ratings[$selectedItem]->item_id]);
         } else {
             return response()->json(["errors" => ["Cannot update this poll."]], 401);
         }
