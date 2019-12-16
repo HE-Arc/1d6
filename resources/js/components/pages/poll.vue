@@ -181,7 +181,7 @@ export default {
           this.$refs.ratingsList.items.push({
             id: poll.items[i].id,
             name: poll.items[i].name,
-            rating: poll.items[i].weight || 1
+            rating: poll.items[i].default_rating || 1
           });
 
           this.items.push({
