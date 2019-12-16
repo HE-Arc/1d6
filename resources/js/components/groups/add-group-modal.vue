@@ -29,6 +29,7 @@
           placeholder="Item name"
           :add-function="addItem"
           :remove-function="removeItem"
+          ref="itemList"
         >Default items</select-list>
       </div>
     </div>
@@ -46,18 +47,28 @@ export default {
   },
   data() {
     return {
-      group: placeholderGroup
+      group: {}
     };
   },
   methods: {
     open: function() {
-      this.group = placeholderGroup;
+      this.group = {
+        name: "Loading ...",
+        users: [],
+        items: [],
+        userCount: 1
+      };
 
       // Set the user as unremovable entry in list
-      this.$refs.userList.unremovableItems.push({
-        id: localStorage.getItem("id"),
-        name: localStorage.getItem("username")
-      });
+      this.$refs.userList.unremovableItems = [
+        {
+          id: localStorage.getItem("id"),
+          name: localStorage.getItem("username") + " (You)"
+        }
+      ];
+
+      this.$refs.userList.items = this.group.users;
+      this.$refs.itemList.items = this.group.items;
       this.$refs.modal.active = true;
     },
     save: function() {
@@ -90,6 +101,7 @@ export default {
     },
     close: function() {},
     addUser: function(email) {
+      console.log(email);
       this.axios
         .get("/users/by-mail/" + encodeURIComponent(email))
         .then(response => {
@@ -132,13 +144,6 @@ export default {
       );
     }
   }
-};
-
-let placeholderGroup = {
-  name: "Loading ...",
-  users: [],
-  items: [],
-  userCount: 0
 };
 </script>
 

@@ -9,9 +9,12 @@
           cannot-delete="cannot-delete"
           v-for="item in unremovableItems"
           v-bind:key="item.index"
+        >{{ item.name }}</list-item>
+        <list-item
+          v-for="item in items"
+          v-bind:key="item.index"
           :remove-function="removeFunction(item)"
-        >{{ item }}</list-item>
-        <list-item v-for="item in items" v-bind:key="item.index">{{ item.name }}</list-item>
+        >{{ item.name }}</list-item>
       </div>
       <div class="field has-addons">
         <div class="control is-expanded">
@@ -44,6 +47,7 @@ export default {
   },
   methods: {
     addToList() {
+      console.log(this.currentValue.value);
       this.addFunction(this.currentValue);
       this.currentValue = "";
     }
