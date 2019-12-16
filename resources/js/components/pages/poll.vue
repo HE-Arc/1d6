@@ -85,7 +85,7 @@ export default {
         };
       });
       this.axios
-        .post("/polls/" + parseInt(this.$route.params.id), data)
+        .post("/polls/" + parseInt(this.$route.params.id) + "/ratings", data)
         .then(response => {})
         .catch(error => {
           alert("ERROR: Could not send ratings");
