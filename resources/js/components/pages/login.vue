@@ -38,6 +38,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -54,6 +56,9 @@ export default {
       localStorage.setItem("id", id);
       localStorage.setItem("username", username);
       localStorage.setItem("apiToken", token);
+      axios.defaults.headers.common = {
+        Authorization: `Bearer ${localStorage.getItem("apiToken")}`
+      };
     },
     formSubmit(e) {
       let router = this.$router;
@@ -64,7 +69,7 @@ export default {
           email: this.email,
           password: this.password
         })
-        .then((response) => {
+        .then(response => {
           this.login(
             response.data.data.id,
             response.data.data.name,
@@ -73,7 +78,7 @@ export default {
 
           router.replace("/");
         })
-        .catch((error) => {
+        .catch(error => {
           let errors = error.response.data.errors;
           this.errors = errors;
           // focus on the first faulty field
