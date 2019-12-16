@@ -32,6 +32,7 @@
             <p v-show="isSpinning">Spinning the wheel!</p>
             <p v-show="isFinished && !isSpinning">This poll is closed</p>
             <button
+              :disabled="userCount === 0"
               v-show="isAdmin && !isSpinning"
               type="submit"
               v-on:click="spinWheel"
@@ -85,7 +86,9 @@ export default {
         };
       });
       this.axios
-        .post("/polls/" + parseInt(this.$route.params.id) + "/ratings", data)
+        .post("/polls/" + parseInt(this.$route.params.id) + "/ratings", {
+          ratings: data
+        })
         .then(response => {})
         .catch(error => {
           alert("ERROR: Could not send ratings");
@@ -107,21 +110,21 @@ export default {
           .get("/polls/" + parseInt(this.$route.params.id) + "/lite")
           .then(response => {
             const poll = response.data ? response.data.data : {};
-
             this.userCount = poll.user_count;
 
             // Update weights
             for (let i = 0; i < poll.items.length; i++) {
               for (let j = 0; j < this.items.length; j++) {
                 if (poll.items[i].id === this.items[j].id) {
-                  this.items[j].weight = poll.items[i].weight;
+                  this.items[j].weight = Math.max(poll.items[i].weight, 0.001);
                 }
               }
             }
+            wheel.methods.render();
 
             // Find voted item
             let votedItem = "";
-            if (poll.chosen_item_id !== -1) {
+            if (poll.chosen_item_id !== null) {
               for (let i = 0; i < this.items.length; i++) {
                 if (this.items[i].id === poll.chosen_item_id) {
                   votedItem = this.items[i].name;
@@ -183,6 +186,7 @@ export default {
           });
 
           this.items.push({
+            id: poll.items[i].id,
             name: poll.items[i].name,
             weight: poll.items[i].weight || 1
           });
