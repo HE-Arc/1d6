@@ -82,10 +82,16 @@ export default {
     save: function() {
       this.axios.patch("/groups/" + this.group.id, {
         name: this.group.name,
-        users_to_add: this.usersToAdd.map(user => user.id),
-        users_to_remove: this.usersToRemove.map(user => user.id),
+        users_to_add: this.usersToAdd.map(user => {
+          return { id: user.id, admin: false };
+        }),
+        users_to_remove: this.usersToRemove.map(user => {
+          return { id: user.id };
+        }),
         items_to_add: this.itemsToAdd,
-        items_to_remove: this.itemsToRemove.map(item => item.id)
+        items_to_remove: this.itemsToRemove.map(item => {
+          return { id: item.id };
+        })
       });
       // don't care for updating this.group, it will be reloaded either way
       // the only thing that is visible is usercount
