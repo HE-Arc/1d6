@@ -153,7 +153,6 @@ export default {
           })
           .catch(error => {
             // TODO: Better error handling
-            console.log(error);
           });
       }
     }
@@ -195,7 +194,6 @@ export default {
       .catch(error => {
         // TODO: Better error handling
         alert("Could not load this poll, please try again in a moment.");
-        console.log(error);
         this.$router.replace("/");
       });
 

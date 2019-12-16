@@ -59,6 +59,11 @@ export default {
   },
   methods: {
     open: function(id) {
+      this.usersToAdd = [];
+      this.usersToRemove = [];
+      this.itemsToAdd = [];
+      this.itemsToRemove = [];
+      
       this.axios
         .get("/groups/" + id)
         .then(response => {

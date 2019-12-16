@@ -75,7 +75,7 @@ export default {
       .catch(error => {
         // TODO: Better error handling
         alert("Could not load polls, please try again in a moment.");
-        console.log(error);
+
         this.polls = [];
         this.closedPolls = [];
       });
