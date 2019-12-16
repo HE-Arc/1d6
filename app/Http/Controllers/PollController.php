@@ -38,11 +38,11 @@ class PollController extends Controller
             'url' => ""
         ]);
 
-        $items = jsonDecodeToArray($request->items);
+        $items = $request->items;
 
         if (count($items) > 0) {
             try {
-                $users = addLoggedUserToData(jsonDecodeToArray($request->users, true), "id", Auth::id(), function (&$arr, $index) {
+                $users = addLoggedUserToData($request["users"], "id", Auth::id(), function (&$arr, $index) {
                     // Make sure owner is admin
                     $arr[$index]["admin"] = true;
                 }, function (&$arr) {
@@ -50,17 +50,16 @@ class PollController extends Controller
                 });
 
                 // TODO: Check if it is not possible to do only one query
-                foreach ($users as $key => $user) {
+                foreach ($users as $user) {
                     $poll->users()->sync([$user["id"] => ['admin' => $user["admin"]]], false);
                 }
 
-                foreach ($items as $key => $item) {
+                foreach ($items as $item) {
                     // TODO: Security issue here, see #113
-                    $poll->items()->attach($item->id);
+                    $poll->items()->attach($item["id"]);
                 }
             } catch (\Throwable $th) {
                 // If anything fails, delete the poll
-                $poll->delete();
                 return response()->json(["errors" => ["Could not create poll."]], 401);
             }
         } else {
