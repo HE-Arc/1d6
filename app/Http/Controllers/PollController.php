@@ -60,6 +60,7 @@ class PollController extends Controller
             } catch (\Throwable $th) {
                 // If anything fails, delete the poll
                 $poll->delete();
+                return response()->json(["errors" => ["Could not create poll."]], 401);
             }
         } else {
             $poll->delete();
