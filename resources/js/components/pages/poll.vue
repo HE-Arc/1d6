@@ -162,11 +162,11 @@ export default {
         const poll = response.data ? response.data.data : {};
 
         this.isAdmin = poll.is_admin;
-        this.isFinished = poll.chosen_item_id !== -1;
-        if (this.isFinished) {
-          this.isSpinning = true;
-          this.isFinished = true;
-        }
+        this.isFinished = false;
+        // this.isFinished = poll.chosen_item_id !== -1;
+        // if (this.isFinished) {
+        //   // TODO: spin the wheel
+        // }
         this.canRate = !poll.has_voted;
         this.userCount = poll.user_count;
         this.totalUserCount = poll.total_user_count;
