@@ -21,6 +21,7 @@ class GroupResource extends JsonResource
             'user_count' => $this->users()->count(),
             'is_admin' =>  $this->users()->find(Auth::id())->pivot->admin,
             'users' => UserResource::collection($this->whenLoaded('users')),
+            'user_count' => $this->users()->count(),
             'items' => ItemResource::collection($this->whenLoaded('items')),
         ];
     }

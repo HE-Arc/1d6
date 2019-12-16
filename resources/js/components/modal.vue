@@ -19,13 +19,10 @@
 
 <script>
 export default {
+  props: ["title", "save-text", "save-function", "close-function"],
   data() {
     return {
       active: false,
-      title: "Title",
-      saveText: "Save",
-      saveFunction: () => {},
-      closeFunction: () => {}
     };
   },
   methods: {
