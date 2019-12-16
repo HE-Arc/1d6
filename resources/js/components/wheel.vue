@@ -202,7 +202,8 @@ function renderBackground(c) {
 
 export default {
   methods: {
-    spin: spin
+    spin: spin,
+    render: render
   },
   mounted() {
     canvas = document.getElementById("wheel-canvas");

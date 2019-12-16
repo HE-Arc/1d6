@@ -31,7 +31,8 @@
           <div class="buttons has-addons is-centered">
             <p v-show="isSpinning">Spinning the wheel!</p>
             <p v-show="isFinished && !isSpinning">This poll is closed</p>
-            <button :disabled="userCount === 0"
+            <button
+              :disabled="userCount === 0"
               v-show="isAdmin && !isSpinning"
               type="submit"
               v-on:click="spinWheel"
@@ -115,10 +116,11 @@ export default {
             for (let i = 0; i < poll.items.length; i++) {
               for (let j = 0; j < this.items.length; j++) {
                 if (poll.items[i].id === this.items[j].id) {
-                  this.items[j].weight = poll.items[i].weight;
+                  this.items[j].weight = Math.max(poll.items[i].weight, 0.001);
                 }
               }
             }
+            wheel.methods.render();
 
             // Find voted item
             let votedItem = "";
@@ -184,6 +186,7 @@ export default {
           });
 
           this.items.push({
+            id: poll.items[i].id,
             name: poll.items[i].name,
             weight: poll.items[i].weight || 1
           });
