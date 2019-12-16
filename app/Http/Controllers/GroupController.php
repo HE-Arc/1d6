@@ -110,7 +110,7 @@ class GroupController extends Controller
 
             // TODO: Check if it is not possible to do only one query
             foreach ($usersToAdd as $key => $user) {
-                $group->users()->sync([$user["id"] => ['admin' => $user->admin]], false);
+                $group->users()->sync([$user["id"] => ['admin' => $user["admin"]]], false);
             }
 
             $itemsToInsert = [];
