@@ -160,7 +160,9 @@ class PollController extends Controller
         $ratings = DB::select('select * from poll_ratings where poll_id = ?', [$poll->id]);
         $hasRatings = count($ratings) > 0;
         if ($isPollAdmin && $hasRatings && $poll->chosen_item_id === null) {
-            $target = random_int(0,17);
+            $sumRatings = 0;
+            foreach($ratings as $rating) $sumRatings += $rating->rating;
+            $target = random_int(0,$sumRatings);
             $i = 0;
 
             foreach($ratings as $rating)
