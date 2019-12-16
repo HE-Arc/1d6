@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 class ItemController extends Controller
 {
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created item in storage and return it's id.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -29,10 +29,9 @@ class ItemController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified items default ratings in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function updateRatings(Request $request)
