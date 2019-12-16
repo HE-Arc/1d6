@@ -68,6 +68,7 @@ export default {
           this.displayedUsers = this.group.users.filter(
             user => user.id !== ownId
           );
+          this.displayedItems = this.group.items;
 
           this.$refs.userList.unremovableItems = this.group.users.filter(
             user => user.id === ownId
