@@ -117,10 +117,17 @@ class PollController extends Controller
     public function show($poll)
     {
         $poll = Poll::with('items')->find($poll);
-        if ($poll->users()->find(Auth::id()) !== null) {
-            return new PollResource($poll);
-        } else {
-            return response()->json(["errors" => ["No access to this poll."]], 401);
+        if ($poll !== null)
+        {
+            if ($poll->users()->find(Auth::id()) !== null) {
+                return new PollResource($poll);
+            } else {
+                return response()->json(["errors" => ["No access to this poll."]], 401);
+            }
+        }
+        else
+        {
+            return response()->json(["errors" => ["This poll does not exist"]], 404);
         }
     }
 
@@ -150,10 +157,9 @@ class PollController extends Controller
     public function update(Request $request, Poll $poll)
     {
         $isPollAdmin = $poll->users->find(Auth::id())->pivot->admin === 1;
-        $ratings = DB::select('select * from poll_ratings where poll_id = ? AND user_id = ?', [$poll->id, Auth::id()]);
-        $hasRatings = count($ratings) > 0;
-        error_log("admin : " . $poll->users->find(Auth::id())->pivot->admin);
-        if ($isPollAdmin && $hasRatings) {
+        $count_ratings = DB::select('select count(*) as count from poll_ratings where poll_id = ? AND user_id = ?', [$poll->id, Auth::id()])->count;
+        $hasRatings = $count_ratings > 0;
+        if ($isPollAdmin && $hasRatings && $poll->chosen_item_id === null) {
             $poll->update(['chosen_item_id' => 1]);
         } else {
             return response()->json(["errors" => ["Cannot update this poll."]], 401);
