@@ -21,6 +21,7 @@ class ItemResource extends JsonResource
             'description' => $this->description,
             'url' => $this->url,
             'image_url' => $this->image_url,
+            // weight is the total sum of ratings the item in this poll has received. it is only loaded when by a poll
             'weight' => $this->whenPivotLoaded('poll_items', function() {
                 return intval(DB::select('select SUM(rating) as weight from poll_ratings where poll_id = ? AND item_id = ?',[$this->pivot->poll_id, $this->id])[0]->weight);
             }),

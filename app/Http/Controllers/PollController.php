@@ -14,7 +14,7 @@ use \Validator;
 class PollController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Return a listing of the authenticated user's polls.
      *
      * @return \Illuminate\Http\Response
      */
@@ -26,7 +26,7 @@ class PollController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created poll with items in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -72,9 +72,9 @@ class PollController extends Controller
     }
 
     /**
-     * Store a newly created rating in storage in the poll_ratings table.
+     * Store a the rating for an item, in a poll, by a user in poll_ratings.
      *
-     * @param  \Illuminate\Http\Request  $request$
+     * @param  \Illuminate\Http\Request  $request
      * @param  int  $pollId
      * @return \Illuminate\Http\Response
      */
@@ -110,9 +110,9 @@ class PollController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified poll if the user is a member.
      *
-     * @param  int  $id
+     * @param  int  $poll
      * @return \Illuminate\Http\Response
      */
     public function show($poll)
@@ -130,7 +130,7 @@ class PollController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified poll if the user is a member - lightweight version used for update on client.
      *
      * @param  int  $poll
      * @return \Illuminate\Http\Response
@@ -146,10 +146,10 @@ class PollController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * If the user is a poll admin and the poll is ready, choose at random (ponderated with the ratings) an item who will be choosed by the wheel
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  Poll  $poll
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Poll $poll)
@@ -157,13 +157,17 @@ class PollController extends Controller
         $isPollAdmin = $poll->users->find(Auth::id())->pivot->admin === 1;
         $ratings = DB::select('select * from poll_ratings where poll_id = ?', [$poll->id]);
         $hasRatings = count($ratings) > 0;
+        // Check that the conditions are respected
         if ($isPollAdmin && $hasRatings && $poll->chosen_item_id === null) {
             $sumRatings = 0;
+            // Calculate the sum of all ratings to allow picking at random
             foreach ($ratings as $rating) {
                 $sumRatings += $rating->rating;
             }
+            // Use of the sum calculated to define the max limit of our random number
             $target = random_int(0, $sumRatings);
 
+            // Substract $target with each rating until one is selected by passing $target < 0
             $selectedItemIndex = 0;
             for ($i = 0; $i < count($ratings); $i++) {
                 $target -= $ratings[$i]->rating;
@@ -179,9 +183,9 @@ class PollController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified poll from storage.
      *
-     * @param  int  $id
+     * @param  Poll  $Poll
      * @return \Illuminate\Http\Response
      */
     public function destroy(Poll $poll)

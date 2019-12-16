@@ -13,7 +13,7 @@ class GroupController extends Controller
     // TODO : Check authorisations
 
     /**
-     * Display a listing of the resource.
+     * Display a listing of the authentified user's groups
      *
      * @return \Illuminate\Http\Response
      */
@@ -26,7 +26,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created group with users and items. Returns the newly created group id.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -68,9 +68,9 @@ class GroupController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified group if the authenticated user is in it.
      *
-     * @param  int  $id
+     * @param  int  $group
      * @return \Illuminate\Http\Response
      */
     public function show($group)
@@ -79,7 +79,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified group name, users and items.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  Group  $group
@@ -139,7 +139,7 @@ class GroupController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified group from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
