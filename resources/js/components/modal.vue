@@ -24,17 +24,19 @@ export default {
       active: false,
       title: "Title",
       saveText: "Save",
-      saveFunction: () => {}
+      saveFunction: () => {},
+      closeFunction: () => {}
     };
   },
   methods: {
     close: function() {
       this.active = false;
+      this.closeFunction();
     },
     save: function() {
       this.saveFunction();
       this.close();
     }
-  },
+  }
 };
 </script>

@@ -2,7 +2,7 @@
   <login-layout>
     <form @submit="formSubmit">
       <div class="field">
-        <label class="label">Username</label>
+        <label class="label">Email</label>
         <div class="control">
           <input
             class="input is-success"
@@ -41,38 +41,47 @@
 export default {
   data() {
     return {
-      errors: {email: [], password: []},
+      errors: { email: [], password: [] },
       email: "",
       password: ""
     };
   },
   methods: {
+    login(id, username, token) {
+      // TODO: DO NOT USE LOCALSTORAGE, it's less safe than cookies for storing tokens
+      // TODO: Handle errors, and success, and querying animation
+      // This would not be done in a "real" application
+      localStorage.setItem("id", id);
+      localStorage.setItem("username", username);
+      localStorage.setItem("apiToken", token);
+    },
     formSubmit(e) {
       let router = this.$router;
       e.preventDefault();
-      let currentObj = this;
+
       this.axios
-        .post(this.axios.defaults.baseURL + "/login", {
+        .post("/login", {
           email: this.email,
           password: this.password
         })
-        .then(function(response) {
-          // TODO: DO NOT USE LOCALSTORAGE, it's less safe than cookies for storing tokens
-          // TODO: Handle errors, and success, and querying animation
-          // This would not be done in a "real" application
-          localStorage.setItem("username", response.data.data.name);
-          localStorage.setItem("apiToken", response.data.data.api_token);
+        .then((response) => {
+          this.login(
+            response.data.data.id,
+            response.data.data.name,
+            response.data.data.api_token
+          );
+
           router.replace("/");
         })
-        .catch(function(error) {
+        .catch((error) => {
           let errors = error.response.data.errors;
-          currentObj.errors = errors;
+          this.errors = errors;
           // focus on the first faulty field
           for (let type in errors) {
-            currentObj.$refs[type].focus();
+            this.$refs[type].focus();
             break;
           }
-          currentObj.output = error;
+          this.output = error;
         });
     }
   }
