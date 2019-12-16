@@ -171,7 +171,6 @@ class PollController extends Controller
                     break;
                 }
             }
-            print($selectedItemIndex);
             $poll->update(['chosen_item_id' => $ratings[$selectedItemIndex]->item_id]);
         } else {
             return response()->json(["errors" => ["Cannot update this poll."]], 401);
