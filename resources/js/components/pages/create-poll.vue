@@ -9,8 +9,8 @@
       <div class="field has-addons">
         <div class="control is-expanded">
           <div class="select is-fullwidth">
-            <select name="groups" v-model="selectedGroup">
-              <option v-for="group in groups" v-bind:key="group" :value="group">{{group.name}}</option>
+            <select ref="group-select" name="groups" v-model="selectedGroup">
+              <option v-for="group in groups" v-bind:key="group.id" :value="group">{{group.name}}</option>
             </select>
           </div>
         </div>
@@ -183,6 +183,10 @@ export default {
             userCount: group.user_count,
             isAdmin: group.is_admin
           });
+        });
+        
+        this.$nextTick(() => {
+          this.$refs["group-select"].selectedIndex = 0;
         });
       })
       .catch(error => {
