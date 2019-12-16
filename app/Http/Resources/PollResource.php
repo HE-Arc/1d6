@@ -20,10 +20,10 @@ class PollResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'is_admin' => $this->users->find(Auth::id())->pivot->admin,
-            'total_user_count' => count($this->users),
-            'user_count' => DB::table('poll_ratings')->select(DB::raw('count(*) as count'))->where('poll_id', $this->id)->groupBy('user_id')->first()->count,
+            'total_user_count' => $this->users->count(),
+            'user_count' => DB::table('poll_ratings')->select(DB::raw('count(DISTINCT user_id) as count'))->where('poll_id', $this->id)->first()->count,
             'chosen_item_id' => $this->chosen_item_id,
-            'has_voted' => DB::table('poll_ratings')->select(DB::raw('count(*) as count'))->where([['poll_id', $this->id], ['user_id', Auth::id()]])->first()->count > 0,
+            'has_voted' => DB::table('poll_ratings')->select(DB::raw('count(DISTINCT user_id) as count'))->where([['poll_id', $this->id], ['user_id', Auth::id()]])->first()->count > 0,
             'items' => ItemResource::collection($this->whenLoaded('items')),
         ];
     }

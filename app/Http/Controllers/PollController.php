@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PollResourceLite;
 use App\Http\Resources\PollResource;
-use App\Http\Resources\PollCollection;
 use App\Poll;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -67,7 +66,7 @@ class PollController extends Controller
             return response()->json(["errors" => ["Cannot create poll without items."]], 401);
         }
 
-        return response()->json(json_encode(["id" => $poll->id]));
+        return response()->json(["id" => $poll->id]);
     }
 
     /**
