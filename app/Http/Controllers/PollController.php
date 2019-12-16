@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PollResourceLite;
 use App\Http\Resources\PollResource;
-use App\Http\Resources\PollCollection;
 use App\Poll;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
