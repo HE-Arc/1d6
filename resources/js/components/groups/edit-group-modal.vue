@@ -60,11 +60,11 @@ export default {
   methods: {
     open: function(id) {
       this.axios
-        .get("/groups/" + this.group.id)
+        .get("/groups/" + id)
         .then(response => {
           this.group = response.data.data;
 
-          let ownId = localStorage.getItem("id");
+          let ownId = parseInt(localStorage.getItem("id"));
           this.displayedUsers = this.group.users.filter(
             user => user.id !== ownId
           );
@@ -80,23 +80,33 @@ export default {
         });
     },
     save: function() {
-      this.axios.patch("/groups/" + this.group.id, {
-        name: this.group.name,
-        users_to_add: this.usersToAdd.map(user => {
-          return { id: user.id, admin: false };
-        }),
-        users_to_remove: this.usersToRemove.map(user => {
-          return { id: user.id };
-        }),
-        items_to_add: this.itemsToAdd,
-        items_to_remove: this.itemsToRemove.map(item => {
-          return { id: item.id };
+      this.axios
+        .patch("/groups/" + this.group.id, {
+          name: this.group.name,
+          users_to_add: this.usersToAdd.map(user => {
+            return { id: user.id, admin: false };
+          }),
+          users_to_remove: this.usersToRemove.map(user => {
+            return { id: user.id };
+          }),
+          items_to_add: this.itemsToAdd,
+          items_to_remove: this.itemsToRemove.map(item => {
+            return { id: item.id };
+          })
         })
-      });
-      // don't care for updating this.group, it will be reloaded either way
-      // the only thing that is visible is usercount
-      this.group.userCount += this.usersToAdd.length;
-      this.group.userCount -= this.usersToRemove.length;
+        .then(response => {
+          let parentsGroup = this.$parent.$parent.groups.find(
+            group => group.id === this.group.id
+          );
+          // This will change the page below.
+          parentsGroup.userCount =
+            this.group.users.length +
+            this.usersToAdd.length -
+            this.usersToRemove.length;
+        })
+        .catch(error => {
+          alert("ERROR: Could not save group");
+        });
     },
     close: function() {
       // TODO: prevent the group being renamed on the groups page

@@ -11,11 +11,12 @@
       type="text"
       placeholder="Where are we gonna eat ?"
       class="input input-group-name"
-      v-model="group.name"
+      v-model="name"
     />
     <div class="columns">
       <div class="column is-half">
         <select-list
+          :items="users"
           icon="fa-user-plus"
           placeholder="Member email"
           :add-function="addUser"
@@ -25,10 +26,12 @@
       </div>
       <div class="column is-half">
         <select-list
+          :items="items"
           icon="fa-plus"
           placeholder="Item name"
           :add-function="addItem"
           :remove-function="removeItem"
+          ref="itemList"
         >Default items</select-list>
       </div>
     </div>
@@ -46,23 +49,35 @@ export default {
   },
   data() {
     return {
-      group: placeholderGroup
+      name: "",
+      users: [],
+      items: []
     };
   },
   methods: {
     open: function() {
-      this.group = placeholderGroup;
+      // Reset group
+      this.name = "";
+      this.users = [];
+      this.items = [];
+      this.userCount = 1;
 
       // Set the user as unremovable entry in list
-      this.$refs.userList.unremovableItems.push({
-        id: localStorage.getItem("id"),
-        name: localStorage.getItem("username")
-      });
+      this.$refs.userList.unremovableItems = [
+        {
+          id: parseInt(localStorage.getItem("id")),
+          name: localStorage.getItem("username") + " (You)"
+        }
+      ];
+
+      // Connect to
+      // this.$refs.userList.items = this.users;
+      // this.$refs.itemList.items = this.items;
       this.$refs.modal.active = true;
     },
     save: function() {
       // Add admin parameter
-      let usersData = this.groups.users.map(user => {
+      let usersData = this.users.map(user => {
         return {
           id: user.id,
           admin: false
@@ -70,19 +85,38 @@ export default {
       });
       // Add self to the group
       usersData.push({
-        id: localStorage.getItem("id"),
+        id: parseInt(localStorage.getItem("id")),
+        admin: true
+      });
+      this.users.push({
+        id: parseInt(localStorage.getItem("id")),
         admin: true
       });
 
-      // Send to the API
+      let itemsData = this.items.map(item => {
+        return {
+          name: item.name,
+          description: "",
+          url: "",
+          image_url: ""
+        };
+      });
+
       this.axios
         .post("/groups", {
-          name: this.group.name,
+          name: this.name,
           users: usersData,
-          items: this.group.items
+          items: itemsData
         })
         .then(response => {
-          this.$parent.groups.push(this.group);
+          this.$parent.$parent.groups.push({
+            id: response.data.data.id,
+            name: this.name,
+            users: this.users,
+            userCount: this.userCount,
+            isAdmin: true,
+            items: []
+          });
         })
         .catch(error => {
           alert("ERROR: Could not save group");
@@ -93,15 +127,14 @@ export default {
       this.axios
         .get("/users/by-mail/" + encodeURIComponent(email))
         .then(response => {
-          // TODO: check the conditions for an empty answer
           if (response.data && response.data.data) {
             let newUser = response.data.data;
             if (
-              this.group.users.filter(user => user.id === newUser.id).length ===
-              0
+              this.users.filter(user => parseInt(user.id) === newUser.id)
+                .length === 0
             ) {
-              this.group.users.push(newUser);
-              ++this.group.userCount;
+              this.users.push(newUser);
+              ++this.userCount;
             }
           }
         })
@@ -110,35 +143,28 @@ export default {
         });
     },
     removeUser: function(userToRemove) {
-      this.group.users.splice(
-        this.group.users.findIndex(user => user.id === userToRemove.id),
+      this.users.splice(
+        this.users.findIndex(user => user.id === userToRemove.id),
         1
       );
-      --this.group.userCount;
+      --this.userCount;
     },
     addItem: function(itemName) {
-      this.group.items.push({
+      this.items.push({
         name: itemName,
         description: "",
         url: "",
         image_url: ""
       });
-      this.group.userCount;
+      this.userCount;
     },
     removeItem: function(itemToRemove) {
-      this.group.items.splice(
-        this.group.items.findIndex(item => item.name === itemToRemove.name),
+      this.items.splice(
+        this.items.findIndex(item => item.name === itemToRemove.name),
         1
       );
     }
   }
-};
-
-let placeholderGroup = {
-  name: "Loading ...",
-  users: [],
-  items: [],
-  userCount: 0
 };
 </script>
 

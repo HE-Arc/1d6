@@ -12,8 +12,8 @@
         v-for="group in groups"
         v-bind:key="group.index"
         v-bind:group="group"
-        :edit-function="editGroup"
-        :delete-function="deleteGroup"
+        :edit-function="editGroup(group.id)"
+        :delete-function="deleteGroup(group.id)"
         :edit-ratings-function="editRatings"
       ></group-card>
     </div>
@@ -44,12 +44,17 @@ export default {
       this.$refs.addGroupModal.open();
     },
     editGroup: function(id) {
+      return () => {
       this.$refs.editGroupModal.open(id);
+      };
     },
     editRatings: function(id) {
+      return () => {
       this.$refs.editDefaultRatingsModal.open(id);
+      };
     },
     deleteGroup: function(id) {
+      return () => {
       this.axios
         .delete("/groups/" + id)
         .then(response => {
@@ -62,6 +67,7 @@ export default {
           // TODO: better error handling
           alert("ERROR: Could not delete group");
         });
+      };
     }
   },
   mounted: function() {

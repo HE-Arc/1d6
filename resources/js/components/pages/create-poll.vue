@@ -169,14 +169,21 @@ export default {
   },
   mounted: function() {
     this.axios
-      .get("/users/" + localStorage.getItem("id"))
+      .get("/groups")
       .then(response => {
         this.user = {
-          id: reponse.data.data.id,
-          name: response.data.data.name,
+          id: localStorage.getItem("id"),
+          name: localStorage.getItem("username"),
           admin: true
         };
-        this.groups = reponse.data.data.groups;
+        response.data.data.forEach(group => {
+          this.groups.push({
+            id: group.id,
+            name: group.name,
+            userCount: group.user_count,
+            isAdmin: group.is_admin
+          });
+        });
       })
       .catch(error => {
         alert("ERROR: Could not load groups");

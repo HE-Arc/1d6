@@ -1,7 +1,7 @@
 <template>
   <span class="list-item">
     <slot />
-    <a href="#" v-if="!cannotDelete" class="delete-item" v-on:click="removeFunction">
+    <a href="#" v-if="!cannotDelete" class="delete-item" v-on:click="removeFunction()">
       <i class="fa fa-trash"></i>
     </a>
   </span>

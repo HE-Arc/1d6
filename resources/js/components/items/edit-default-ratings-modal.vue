@@ -31,7 +31,7 @@ export default {
       this.axios
         .get("/groups/" + id)
         .then(response => {
-          this.$refs.ratingsList.items = reponse.data.data.items;
+          this.$refs.ratingsList.items = response.data.data.items;
           this.$refs.modal.active = true;
         })
         .catch(error => {
