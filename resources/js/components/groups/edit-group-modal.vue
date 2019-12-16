@@ -113,7 +113,6 @@ export default {
         })
         .catch(error => {
           alert("ERROR: Could not save group");
-          console.log(error, error.response);
         });
     },
     close: function() {
