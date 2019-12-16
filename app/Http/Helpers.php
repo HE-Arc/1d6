@@ -12,7 +12,12 @@ if (!function_exists('addLoggedUserToData')) {
         $hasLoggedUser = false;
 
         foreach ($users as $k => $value) {
-            if (intval($value->$key) === $userId) {
+            if (is_object($value)) {
+                $id = $value->$key;
+            } else {
+                $id = $value[$key];
+            }
+            if (intval($id) === $userId) {
                 $hasLoggedUser = true;
                 $onFound($users, $k);
                 break;
@@ -37,8 +42,7 @@ if (!function_exists('jsonDecodeToArray')) {
 
         if (!is_array($data)) {
             return [];
-        }
-        else {
+        } else {
             return $data;
         }
     }
