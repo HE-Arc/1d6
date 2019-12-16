@@ -22,7 +22,7 @@ class ItemResource extends JsonResource
             'url' => $this->url,
             'image_url' => $this->image_url,
             'weight' => $this->whenPivotLoaded('poll_items', function() {
-                return DB::select('select SUM(rating) as weight from poll_ratings where poll_id = ? AND item_id = ?',[$this->pivot->poll_id, $this->id])[0]->weight;
+                return intval(DB::select('select SUM(rating) as weight from poll_ratings where poll_id = ? AND item_id = ?',[$this->pivot->poll_id, $this->id])[0]->weight);
             }),
             'users' => UserResource::collection($this->whenLoaded('users')),
             'polls' => ItemResource::collection($this->whenLoaded('polls')),
