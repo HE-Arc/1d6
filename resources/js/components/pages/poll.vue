@@ -67,23 +67,39 @@ export default {
         { name: "Loading...", weight: 1 },
         { name: "Loading...", weight: 1 }
       ],
-      isAdmin: false, // TODO: Query from API
-      isFinished: false, // Will automatically be changed in pollServer
-      isSpinning: false, // Will automatically be changed in pollServer
-      canRate: true, // TODO: Query from API
-      userCount: 0, // Will automatically be changed in pollServer
-      totalUserCount: 0 // Will automatically be changed in pollServer
+      isAdmin: false,
+      isFinished: false,
+      isSpinning: false,
+      canRate: true,
+      userCount: 0,
+      totalUserCount: 0
     };
   },
   methods: {
     submitRatings() {
       this.canRate = false;
-      // TODO: Send ratings
+      let data = this.$refs.ratingsList.items.map(item => {
+        return {
+          id: item.id,
+          rating: item.rating
+        };
+      });
+      this.axios
+        .post("/polls/" + parseInt(this.$route.params.id) + "/ratings", data)
+        .then(response => {})
+        .catch(error => {
+          alert("ERROR: Could not send ratings");
+        });
     },
     spinWheel(votedItem) {
       this.isSpinning = true;
       // Wheel will automatically be spinned when the server answers it in the polling
-      // TODO: Send data to the server
+      this.axios
+        .patch("/polls/" + parseInt(this.$route.params.id))
+        .then(response => {})
+        .catch(error => {
+          alert("Could not close votes");
+        });
     },
     pollServer() {
       if (!this.isFinished) {
@@ -146,8 +162,11 @@ export default {
         const poll = response.data ? response.data.data : {};
 
         this.isAdmin = poll.is_admin;
-        // TODO: Make the wheel spin instant here
-        this.isFinished = poll.chosen_item_id !== -1;
+        this.isFinished = false;
+        // this.isFinished = poll.chosen_item_id !== -1;
+        // if (this.isFinished) {
+        //   // TODO: spin the wheel
+        // }
         this.canRate = !poll.has_voted;
         this.userCount = poll.user_count;
         this.totalUserCount = poll.total_user_count;
@@ -158,6 +177,7 @@ export default {
 
         for (let i = 0; i < poll.items.length; i++) {
           this.$refs.ratingsList.items.push({
+            id: poll.items[i].id,
             name: poll.items[i].name,
             rating: poll.items[i].weight || 1
           });
@@ -185,7 +205,7 @@ export default {
     selectRatings,
     wheel
   },
-  beforeRouteLeave (to, from, next) {
+  beforeRouteLeave(to, from, next) {
     clearInterval(pollPollingInterval);
     next();
   },
