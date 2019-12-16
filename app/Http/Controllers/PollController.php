@@ -117,16 +117,13 @@ class PollController extends Controller
     public function show($poll)
     {
         $poll = Poll::with('items')->find($poll);
-        if ($poll !== null)
-        {
+        if ($poll !== null) {
             if ($poll->users()->find(Auth::id()) !== null) {
                 return new PollResource($poll);
             } else {
                 return response()->json(["errors" => ["No access to this poll."]], 401);
             }
-        }
-        else
-        {
+        } else {
             return response()->json(["errors" => ["This poll does not exist"]], 404);
         }
     }
@@ -158,25 +155,24 @@ class PollController extends Controller
     {
         $isPollAdmin = $poll->users->find(Auth::id())->pivot->admin === 1;
         $ratings = DB::select('select * from poll_ratings where poll_id = ?', [$poll->id]);
-        $hasRatings = count($ratings) > 0; 
+        $hasRatings = count($ratings) > 0;
         if ($isPollAdmin && $hasRatings && $poll->chosen_item_id === null) {
             $sumRatings = 0;
-            foreach($ratings as $rating) 
-            {
+            foreach ($ratings as $rating) {
                 $sumRatings += $rating->rating;
             }
-            $target = random_int(0,$sumRatings);
-            
-            $selectedItem = 0;
-            for($i = 0; $i < count($ratings); $i++)
-            {
+            $target = random_int(0, $sumRatings);
+
+            $selectedItemIndex = 0;
+            for ($i = 0; $i < count($ratings); $i++) {
                 $target -= $ratings[$i]->rating;
-                if($target > 0) 
-                {
-                    $selectedItem = $i;
+                if ($target <= 0) {
+                    $selectedItemIndex = $i;
+                    break;
                 }
             }
-            $poll->update(['chosen_item_id' => $ratings[$selectedItem]->item_id]);
+            print($selectedItemIndex);
+            $poll->update(['chosen_item_id' => $ratings[$selectedItemIndex]->item_id]);
         } else {
             return response()->json(["errors" => ["Cannot update this poll."]], 401);
         }
