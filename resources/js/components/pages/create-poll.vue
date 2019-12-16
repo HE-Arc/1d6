@@ -1,27 +1,28 @@
 <template>
   <default-layout>
+    <label class="label">Import settings from group</label>
+    <div class="field has-addons">
+      <div class="control is-expanded">
+        <div class="select is-fullwidth">
+          <select ref="group-select" name="groups" v-model="selectedGroup">
+            <option v-for="group in groups" v-bind:key="group.id" :value="group">{{group.name}}</option>
+          </select>
+        </div>
+      </div>
+      <div class="control">
+        <button
+          :disabled="selectedGroup.id === undefined"
+          type="submit"
+          class="button is-primary"
+          v-on:click="importGroupSettings"
+        >Import settings</button>
+      </div>
+    </div>
     <form v-on:submit.prevent="createPoll">
       <h1>Create a new poll</h1>
       <label class="label">Name</label>
       <input type="text" placeholder class="input" v-model="poll.name" />
 
-      <label class="label">Import settings from group</label>
-      <div class="field has-addons">
-        <div class="control is-expanded">
-          <div class="select is-fullwidth">
-            <select name="groups" v-model="selectedGroup">
-              <option v-for="group in groups" v-bind:key="group" :value="group">{{group.name}}</option>
-            </select>
-          </div>
-        </div>
-        <div class="control">
-          <button
-            type="submit"
-            class="button is-primary"
-            v-on:click="importGroupSettings"
-          >Import settings</button>
-        </div>
-      </div>
       <hr />
 
       <div class="columns">
@@ -29,6 +30,7 @@
           <select-list
             icon="fa-user-plus"
             placeholder="Member name"
+            :items="poll.users"
             :add-function="addUser"
             :remove-function="removeUser"
           >Members</select-list>
@@ -37,6 +39,7 @@
           <select-list
             icon="fa-plus"
             placeholder="Item name"
+            :items="poll.items"
             :add-function="addItem"
             :remove-function="removeItem"
           >Default items</select-list>
@@ -76,20 +79,29 @@ export default {
     isReadyToCreate: function() {
       return this.poll.name !== "" && this.poll.items.length > 0;
     },
-    importGroupSettings: function() {
-      this.poll.name = selectedGroup.name;
+    importGroupSettings() {
+      if (this.selectedGroup.id !== undefined) {
+        this.poll.name = this.selectedGroup.name;
 
-      this.poll.items = [];
-      this.selectedGroup.items.forEach(item => {
-        this.poll.items.push(item);
-      });
+        this.poll.items = [];
 
-      this.poll.users = [this.user];
-      this.selectedGroup.users.forEach(user => {
-        if (user.id !== localStorage.getItem("id")) {
-          this.poll.users.push(user);
-        }
-      });
+        this.axios
+          .get("/groups/" + this.selectedGroup.id)
+          .then(response => {
+            response.data.data.items.forEach(item => {
+              this.poll.items.push(item);
+            });
+
+            response.data.data.users.forEach(user => {
+              if (user.id !== localStorage.getItem("id")) {
+                this.poll.users.push(user);
+              }
+            });
+          })
+          .catch(error => {
+            alert("This user could not be found.");
+          });
+      }
     },
     addUser: function(email) {
       this.axios
@@ -133,7 +145,7 @@ export default {
         .then(response => {
           this.poll.items.push({
             name: itemName,
-            id: response.data.data.id
+            id: response.data.id
           });
         })
         .catch(error => {
@@ -151,7 +163,7 @@ export default {
       let data = {
         name: this.poll.name,
         users: this.poll.users.map(user => {
-          return { id: user.id, admin: user.admin };
+          return { id: user.id, admin: false };
         }),
         items: this.poll.items.map(item => {
           return { id: item.id };
@@ -160,7 +172,7 @@ export default {
       this.axios
         .post("/polls", data)
         .then(response => {
-          router.replace("/poll/" + response.data.data.id);
+          this.$router.replace("/poll/" + response.data.id);
         })
         .catch(error => {
           alert("ERROR: Could not create poll");
