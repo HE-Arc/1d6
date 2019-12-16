@@ -67,7 +67,7 @@ export default {
       selectedGroup: {},
       poll: {
         name: "",
-        users: [{ name: localStorage.getItem("username") + " (You)" }],
+        users: [],
         items: []
       }
     };
