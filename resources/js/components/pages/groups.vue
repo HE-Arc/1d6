@@ -67,9 +67,16 @@ export default {
   mounted: function() {
     this.groups = [];
     this.axios
-      .get("/users/" + localStorage.getItem("id"))
+      .get("/groups/")
       .then(response => {
-        this.groups = response.data.data.groups;
+        response.data.data.forEach(group => {
+          this.groups.push({
+            id: group.id,
+            name: group.name,
+            userCount: group.user_count,
+            isAdmin: group.is_admin
+          });
+        })
       })
       .catch(error => {
         // TODO: better error handling

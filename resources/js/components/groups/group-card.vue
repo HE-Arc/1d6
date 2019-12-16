@@ -3,12 +3,12 @@
     <span class="header">{{group.name}}</span>
     <b>{{group.userCount}}</b> members
     <br />
-    <span v-if="group.is_admin" class="poll-card-action">
+    <span v-if="group.isAdmin" class="poll-card-action">
       <a href="#" v-on:click="editFunction(group.id)">
         <i class="fa fa-edit"></i> Edit
       </a>
     </span>
-    <span v-if="group.is_admin" class="poll-card-action">
+    <span v-if="group.isAdmin" class="poll-card-action">
       <a href="#" v-on:click="deleteFunction(group.id)">
         <i class="fa fa-trash"></i> Delete
       </a>
