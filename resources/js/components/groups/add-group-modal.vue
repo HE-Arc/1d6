@@ -91,7 +91,7 @@ export default {
     close: function() {},
     addUser: function(email) {
       this.axios
-        .get("/users/by-mail/" + email)
+        .get("/users/by-mail/" + encodeURIComponent(email))
         .then(response => {
           // TODO: check the conditions for an empty answer
           if (response.data && response.data.data) {
