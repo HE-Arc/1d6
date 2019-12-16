@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\PollResourceLite;
 use App\Http\Resources\PollResource;
+use App\Http\Resources\PollResourceLite;
+use App\Http\Resources\PollResourceCollection;
 use App\Poll;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ class PollController extends Controller
      */
     public function index()
     {
-        return PollResource::collection(Poll::whereHas('users', function ($query) {
+        return PollResourceCollection::collection(Poll::whereHas('users', function ($query) {
             $query->whereIn('user_id', [Auth::id()]);
         })->paginate(25));
     }
