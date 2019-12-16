@@ -27,11 +27,17 @@ export default {
     };
   },
   methods: {
-    open: function() {
+    open: function(id) {
       this.axios
         .get("/groups/" + id)
         .then(response => {
-          this.$refs.ratingsList.items = response.data.data.items;
+          this.$refs.ratingsList.items = response.data.data.items.map(item => {
+            return {
+              id: item.id,
+              name: item.name,
+              rating: item.default_rating
+            };
+          })
           this.$refs.modal.active = true;
         })
         .catch(error => {
