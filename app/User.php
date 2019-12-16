@@ -45,7 +45,7 @@ class User extends Authenticatable
 
         return $this->api_token;
     }
-    
+
     /**
      * The groups the user is in
      */

@@ -21,7 +21,7 @@ class Item extends Model
     /**
      * The groups which poll over this item
      */
-    public function groups() 
+    public function groups()
     {
         return $this->belongsToMany('App\Group', 'group_items');
     }

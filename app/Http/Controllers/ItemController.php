@@ -4,23 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ItemResource;
 use App\Item;
+use \Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ItemController extends Controller
 {
-
-    // TODO : Check authorisations
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return ItemResource::collection(Item::with('users', 'groups', 'polls')->paginate(25));
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -36,22 +25,7 @@ class ItemController extends Controller
             'image_url' => $request->image_url,
         ]);
 
-        attach($item->groups(), $request->groups);
-        attach($item->users(), $request->users, "rating");
-        attach($item->polls(), $request->polls);
-
-        return new ItemResource(Item::with('users', 'groups', 'polls')->find($item->id));
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show(int $item)
-    {
-        return new ItemResource(Item::with('users', 'groups', 'polls')->find($item));
+        return response()->json(["id" => $item->id]);
     }
 
     /**
@@ -61,32 +35,19 @@ class ItemController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Item $item)
+    public function updateRatings(Request $request)
     {
-        $item->update($request->only(['name', 'description', 'url', 'image_url']));
+        $items = jsonDecodeToArray($request->ratings, true);
+        $validator = Validator::make($items, ['*.rating' => 'integer|required|max:10|min:0']);
 
-        update($item->users(), $request->usersToAdd, false, "rating");
-        update($item->polls(), $request->pollsToAdd);
-        update($item->groups(), $request->groupsToAdd);
-
-        update($item->users(), $request->usersToRemove, true);
-        update($item->polls(), $request->pollsToRemove, true);
-        update($item->groups(), $request->groupsToRemove, true);
-
-        return new ItemResource(Item::with('users', 'groups', 'polls')->find($item->id));
-    }
-
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Item $item)
-    {
-        $item->delete();
-
-        return response()->json(null, 204);
+        if ($validator->passes()) {
+            // TODO: Check how to do only 1 request
+            foreach ($items as $key => $item) {
+                Item::find($item["id"])->users()->sync([Auth::id() => ['rating' => $item["rating"]]], false);
+            }
+            return null;
+        } else {
+            return response()->json(["errors" => ["Invalid rating range."]], 401);
+        }
     }
 }

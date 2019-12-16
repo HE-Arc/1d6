@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\GroupResource;
+use App\Http\Resources\ItemResource;
 use App\Group;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class GroupController extends Controller
 {
-        // TODO : Check authorisations
+    // TODO : Check authorisations
 
     /**
      * Display a listing of the resource.
@@ -17,7 +19,10 @@ class GroupController extends Controller
      */
     public function index()
     {
-        return GroupResource::collection(Group::with('users', 'items')->paginate(25));
+
+        return GroupResource::collection(Group::whereHas('users', function ($query) {
+            $query->whereIn('user_id', [Auth::id()]);
+        })->paginate(25));
     }
 
     /**
@@ -27,15 +32,39 @@ class GroupController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { 
+    {
         $group = Group::create([
-            'name' => $request->name, 
-          ]);
+            'name' => $request->name,
+        ]);
 
-        attach($group->users(), $request->users, "admin");
-        attach($group->items(), $request->items);
-    
-        return new GroupResource(Group::with('users', 'items')->find($group->id));
+        $items = jsonDecodeToArray($request->items);
+
+        $users = addLoggedUserToData(jsonDecodeToArray($request->users), "id", Auth::id(), function (&$arr, $index) {
+            // Make sure owner is admin
+            $arr[$index]->admin = true;
+        }, function (&$arr) {
+            // Dirty trick to create an object as "object" is reserved by laravel (wtf?)
+            $arr[] = json_decode(json_encode(["id" => Auth::id(), "admin" => true]));
+        });
+
+        // TODO: Check if it is not possible to do only one query
+        foreach ($users as $key => $user) {
+            $group->users()->sync([$user->id => ['admin' => $user->admin]], false);
+        }
+
+        $itemsToInsert = [];
+        foreach ($items as $key => $item) {
+            $itemsToInsert[] = [
+                "name" => $item->name,
+                "description" => $item->description ?? "",
+                "url" => $item->url ?? "",
+                "image_url" => $item->image_url ?? "",
+            ];
+        }
+
+        $group->items()->createMany($itemsToInsert);
+
+        return json_encode(["data" => ["id" => $group->id]]);
     }
 
     /**
@@ -58,15 +87,55 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        $group->update($request->only(['name']));
+        if ($group->users()->find(Auth::id())->pivot->admin === 1) {
+            $group->update($request->only(['name']));
 
-        update($group->users(), $request->usersToAdd, false, "admin");
-        update($group->items(), $request->itemsToAdd);
+            // TODO: Using json_decode seems fishy, there must be a nicer way to do that
+            $usersToAdd = jsonDecodeToArray($request->users_to_add);
+            $usersToRemove = jsonDecodeToArray($request->users_to_remove);
+            $itemsToAdd = jsonDecodeToArray($request->items_to_add);
+            $itemsToRemove = jsonDecodeToArray($request->items_to_remove);
 
-        update($group->users(), $request->usersToRemove, true);
-        update($group->items(), $request->itemsToRemove, true);
+            // We should not be able to find the connected user in any array, if we do it means something is wrong
+            foreach ($usersToAdd as $key => $value) {
+                if (intval($usersToAdd[$key]->id) === Auth::id()) {
+                    return response()->json(["errors" => ["Cannot update self user."]], 401);
+                }
+            }
+            foreach ($usersToRemove as $key => $value) {
+                if (intval($usersToRemove[$key]->id) === Auth::id()) {
+                    return response()->json(["errors" => ["Cannot remove self user."]], 401);
+                }
+            }
 
-        return new GroupResource($group);
+            // TODO: Check if it is not possible to do only one query
+            foreach ($usersToAdd as $key => $user) {
+                $group->users()->sync([$user->id => ['admin' => $value->admin]], false);
+            }
+
+            $itemsToInsert = [];
+            foreach ($itemsToAdd as $key => $item) {
+                $itemsToInsert[] = [
+                    "name" => $item->name,
+                    "description" => $item->description ?? "",
+                    "url" => $item->url ?? "",
+                    "image_url" => $item->image_url ?? "",
+                ];
+            }
+
+            $group->items()->createMany($itemsToInsert);
+
+            foreach ($usersToRemove as $key => $user) {
+                $group->users()->detach($user->id);
+            }
+            foreach ($itemsToRemove as $key => $item) {
+                $group->items()->detach($item->id);
+            }
+
+            return null;
+        } else {
+            return response()->json(null, 401);
+        }
     }
 
     /**
@@ -77,8 +146,12 @@ class GroupController extends Controller
      */
     public function destroy(Group $group)
     {
-        $group->delete();
+        if ($group->users()->find(Auth::id())->pivot->admin === 1) {
+            $group->delete();
 
-        return response()->json(null, 204);
+            return response()->json(null, 204);
+        } else {
+            return response()->json(null, 401);
+        }
     }
 }

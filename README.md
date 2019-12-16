@@ -22,6 +22,9 @@ sudo apt-get install php-xml
 # Install the first layer of bloat (around 9268 files ~~to display one h1 and 8 links~~)
 composer install
 
+# If required, run the following command to load the helper file
+composer dump-autoload
+
 # Here is the other layer of bloat (~12828 files)
 npm install
 
