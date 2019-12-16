@@ -1,5 +1,5 @@
 <template>
-  <form v-on:submit.prevent="addFunction">
+  <form v-on:submit.prevent="addToList">
     <span>
       <label class="label">
         <slot />
