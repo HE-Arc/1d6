@@ -156,8 +156,8 @@ class PollController extends Controller
     public function update(Request $request, Poll $poll)
     {
         $isPollAdmin = $poll->users->find(Auth::id())->pivot->admin === 1;
-        $ratings = DB::select('select * from poll_ratings where poll_id = ? AND user_id = ?', [$poll->id, Auth::id()]);
-        $hasRatings = count($ratings) > 0;
+        $count_ratings = DB::select('select count(*) as count from poll_ratings where poll_id = ? AND user_id = ?', [$poll->id, Auth::id()])->count;
+        $hasRatings = $count_ratings > 0;
         if ($isPollAdmin && $hasRatings && $poll->chosen_item_id === null) {
             $poll->update(['chosen_item_id' => 1]);
         } else {
