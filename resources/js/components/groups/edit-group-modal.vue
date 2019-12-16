@@ -110,13 +110,9 @@ export default {
             this.group.users.length +
             this.usersToAdd.length -
             this.usersToRemove.length;
-          console.log("usercount", this.group.users.length);
-          console.log("added", this.usersToAdd.length);
-          console.log("removed", this.usersToRemove.length);
         })
         .catch(error => {
           alert("ERROR: Could not save group");
-          console.log(error, error.response);
         });
     },
     close: function() {
