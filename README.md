@@ -1,5 +1,8 @@
+This project is now archived. It was a school project and it is not planned to work on it again in the future.
+
 # 1d6
 Allows indecisive groups of people to make a decision
+
 
 # Installation guide
 Make sure you have a working php (7.2 is recommended) and database (MySql or PostgreSQL should work) installation.
